@@ -1,0 +1,21 @@
+.custom-header-cell {
+  background-color: #eff4f9 !important;
+  border-bottom: 1px solid #eaecf1 !important;
+  border-top: 1px solid #eaecf1 !important;
+  padding:0 !important;
+}
+
+.custom-message-box-z-index {
+  z-index: 3000 !important;
+}
+
+.custom-button-in-table {
+  padding: 4px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.custom-button-in-toolbar {
+  padding: 8px;
+}
+
