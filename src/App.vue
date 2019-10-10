@@ -31,25 +31,25 @@
 </script>
 <style scoped>
   .login-animate-leave-active {
-    animation: slide-up 0.6s;
+    animation: fade-in 0.4s reverse;
   }
 
   .logout-animate-enter-active {
-    animation: slide-up 0.6s reverse;
+    animation: fade-in 0.4s ;
   }
 
   .show-animate-enter-active {
     animation: fade-in 0.4s;
   }
 
-  @keyframes slide-up {
-    0% {
-      transform: translateY(0)
-    }
-    100% {
-      transform: translateY(-100%)
-    }
-  }
+  /*@keyframes slide-up {*/
+  /*  0% {*/
+  /*    transform: translateY(0)*/
+  /*  }*/
+  /*  100% {*/
+  /*    transform: translateY(-100%)*/
+  /*  }*/
+  /*}*/
 
   @keyframes fade-in {
     0% {

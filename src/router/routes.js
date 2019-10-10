@@ -17,7 +17,7 @@ export default [
     children: [{
       path: '/',
       name: 'passHomepage',
-      component: () => import('src/views/content/passHomepage/Index'),
+      component: () => import('src/views/content/homepage/HomePage'),
       meta: { title: '首页' },
     },],
   }, {
@@ -36,11 +36,6 @@ export default [
         name: 'letClue-letterClueClassify',
         component: () => import('src/views/content/letter/LetterClueClassify'),
         meta: { title: '表单分类', value: 'letClueType', }
-      }, {
-        path: 'review',
-        name: 'letClue-review',
-        component: () => import('src/views/content/letter/Review'),
-        meta: { title: '表单审批', value: 'reviewLetClue', }
       }
     ]
   },
