@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-form :inline="true" class="form-top" ref="TopForm">
+    <el-form :inline="true" class="form-top reduce-height-element" >
       <el-form-item >
         <el-button type="primary" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="prepareAdd">增加</el-button>
       </el-form-item>
     </el-form>
     <template>
-      <el-table :data="tableData" border header-cell-class-name="custom-header-cell" :height="tableHeight" stripe style="width: 100%">
+      <el-table :data="tableData" border header-cell-class-name="custom-header-cell" :height="tableAutoHeight" stripe style="width: 100%">
         <el-table-column type="index" align="center" label="序号" width="50"></el-table-column>
         <el-table-column prop="username" align="center" width="150" label="用户名" sortable></el-table-column>
         <el-table-column prop="nickname" align="center" width="150" label="昵称" sortable></el-table-column>
@@ -79,14 +79,15 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
   import UserApi from 'src/api/user-api';
   import RoleApi from 'src/api/role-api.js';
   import UnitApi from 'src/api/unit-api';
   import { showResMsg } from 'src/utils/operation-result-message';
   import { cascaderValue } from 'src/utils/cascader-utils';
+  import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
 
   export default {
+    mixins: [SimpleAutoHeightTable],
     name: 'User',
     data() {
       return {
@@ -97,7 +98,6 @@
           children: 'children',
         },
         isCreate: true,
-        tableHeight: 0,
         tableData: [],
         unitTreeData: [],
         isShowAddOrUpdateDialog: false,
@@ -115,11 +115,7 @@
         roleData: [],
       };
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val - this.$refs.TopForm.$el.offsetHeight;
-      },
-    },
+
     created() {
       this.form = JSON.parse(JSON.stringify(this.formEmpty));
       UnitApi.getUnitTree({
@@ -132,9 +128,7 @@
         .then(({ data }) => {
           this.unitTreeData = data.data.unitTree;
         });
-      this.$nextTick(() => {
-        this.tableHeight = this.contentHeight - this.$refs.TopForm.$el.offsetHeight;
-      });
+
       this.fetchData();
       RoleApi.getRoleList({ isDelete: this.isDelete, orderBy: { name: true, } })
         .then(({ data }) => {
@@ -227,11 +221,7 @@
           });
       },
     },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
-    },
+
   };
 </script>
 

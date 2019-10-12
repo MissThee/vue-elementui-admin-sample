@@ -19,3 +19,6 @@
   padding: 8px;
 }
 
+.reduce-height-element{
+  box-sizing: border-box;
+}

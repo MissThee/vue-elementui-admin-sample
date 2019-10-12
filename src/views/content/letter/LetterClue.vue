@@ -102,7 +102,6 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex';
   import Global from 'src/utils/global';
   import DataDictionaryApi from 'src/api/data-dictionary-api';
   import { getToken } from 'src/utils/cookies';
@@ -116,7 +115,6 @@
     data() {
       return {
         titleName: '增加',
-        tableHeight: 0,
         headers: {
           Authorization: getToken(),
         },
@@ -189,9 +187,7 @@
         this.$message.warning(`当前限制选择 20 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       initSelectorData() {
-        this.$nextTick(() => {
-          this.tableHeight = this.contentHeight - 200;
-        });
+
         // 线索来源
         DataDictionaryApi.getDictionary({ listUrl: '/dic/source/all', isDelete: false })
           .then(({ data }) => {
@@ -349,16 +345,8 @@
         this.$refs.fileUploader.clearFiles();
       }
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val - 200;
-      },
-    },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
-    },
+
+
   };
 </script>
 

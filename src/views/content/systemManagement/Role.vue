@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div style="width: 50%;float: left">
-      <el-table :data="tableData" border :height="tableHeight" stripe header-cell-class-name="custom-header-cell" @row-click="rowClickHandler" style="width: 100%">
+    <div style="width: 50%;float: left" >
+      <el-table :data="tableData" border :height="tableAutoHeight" stripe header-cell-class-name="custom-header-cell" @row-click="rowClickHandler" style="width: 100%">
         <el-table-column type="index" align="center" width="50" label="序号"></el-table-column>
         <el-table-column prop="name" align="center" sortable min-width="150" label="角色名"></el-table-column>
         <el-table-column prop="isEnable" align="center" sortable width="80" label="状态">
@@ -16,7 +16,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div style="width: 50%;float: left">
+    <div style="width: 50%;float: left;overflow: auto" :style="{height:tableAutoHeight+'px'}">
       <el-card>
         <div slot="header" style="height: 30px;font-size:20px;font-weight: bold">
           <span>{{isUpdate?'修改':'新建'}}{{(form.name===undefined||form.name===''?'':'【')+form.name+(form.name===undefined||form.name===''?'':'】')}}</span>
@@ -55,18 +55,18 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
   import RoleApi from 'src/api/role-api';
   import PermissionApi from 'src/api/permission-api';
   import { showResMsg } from 'src/utils/operation-result-message';
+  import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
 
   export default {
+    mixins: [SimpleAutoHeightTable],
     name: 'Role',
     data() {
       return {
         isUpdate: undefined,
         thisRowId: '',
-        tableHeight: 0,
         tableData: [],
         permissionTree: [],
         form: {},
@@ -92,16 +92,8 @@
         },
       };
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val ;
-      },
-    },
     created() {
       this.form = JSON.parse(JSON.stringify(this.formEmpty));
-      this.$nextTick(() => {
-        this.tableHeight = this.contentHeight ;
-      });
       this.fetchData();
       this.initPermissionTree();
     },
@@ -177,11 +169,6 @@
               });
           });
       },
-    },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
     },
   };
 </script>

@@ -1,9 +1,9 @@
 <template>
   <div style="margin-left: 10px">
-    <el-button ref="AddButton" type="text" icon="el-icon-circle-plus-outline" @click="add()">添加权限</el-button>
-    <div style="overflow: auto" :style="{height: tableHeight+ 'px'}">
+    <el-button ref="AddButton" type="text" icon="el-icon-circle-plus-outline" class="reduce-height-element" @click="add()">添加权限</el-button>
+    <div style="overflow: auto" :style="{height: tableAutoHeight+ 'px'}">
       <el-tree :data="treeData" node-key="id" default-expand-all :expand-on-click-node="false" highlight-current>
-      <span class="custom-tree-node" slot-scope="{ node, data }" >
+      <span class="custom-tree-node" slot-scope="{ node, data }">
         <span :style="{color:node.data.isEnable?'black':'red' }"><i :class="getIconClass(node.data.type)" :style="{color: getIconColor(node.data.type)}"></i>{{ node.data.name }}</span>
         <span>
           <el-button type="text" style="color: #67C23A;"
@@ -20,35 +20,30 @@
       </el-tree>
     </div>
     <!-- 弹窗 -->
-    <PermissionDialog ref="editDialog"  @up-data="fetchData"></PermissionDialog>
+    <PermissionDialog ref="editDialog" @up-data="fetchData"></PermissionDialog>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
   import PermissionDialog from './PermissionDialog';
   import PermissionApi from 'src/api/permission-api';
   import { showResMsg } from 'src/utils/operation-result-message';
+  import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
 
   export default {
+    mixins: [SimpleAutoHeightTable],
     name: 'Permission',
+    components: {
+      PermissionDialog,
+    },
     data() {
       return {
         treeData: [],
         treeInfo: [],
         nodeInfo: {},
-        tableHeight: 0
       };
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val  - this.$refs.AddButton.$el.offsetHeight;
-      },
-    },
     created() {
-      this.$nextTick(() => {
-        this.tableHeight = this.contentHeight - this.$refs.AddButton.$el.offsetHeight;
-      });
       this.fetchData();
     },
     methods: {
@@ -116,14 +111,8 @@
         }
       },
     },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
-    },
-    components: {
-      PermissionDialog,
-    },
+
+
   };
 </script>
 

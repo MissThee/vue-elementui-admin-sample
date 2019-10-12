@@ -81,6 +81,7 @@
       window.onresize = () => {//窗口大小改变设置高度，限制更新频率
         if (this.timer) {
           this.setContentHeight(window.innerHeight - this.$refs.header.$el.offsetHeight - this.$refs.tabs.$el.offsetHeight);
+          this.setContentWidth(window.innerWidth);
           setTimeout(() => {
             this.timer = true;
           }, 16);
@@ -90,6 +91,7 @@
     methods: {
       ...mapMutations({
         setContentHeight: types.SET_CONTENT_HEIGHT,
+        setContentWidth: types.SET_CONTENT_WIDTH,
       }),
       dialogChangePersonalPassword() {
         if (this.form.oldPassword.length === 0) {
@@ -151,9 +153,7 @@
         return JSON.parse(getLoginInfo()).user.nickname;
       }
     },
-    computed: {
-      ...mapGetters({}),
-    },
+
   };
 </script>
 

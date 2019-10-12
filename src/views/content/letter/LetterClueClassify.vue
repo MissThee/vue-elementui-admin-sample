@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true" ref="elForm" style="box-sizing: border-box">
+    <el-form :inline="true"  style="box-sizing: border-box" class="reduce-height-element">
       <el-form-item label="分类：" style="margin-left: 10px;">
         <el-select size="small" v-model="inquires.resultTypeId" placeholder="请选择" clearable style="width: 100px;">
           <el-option v-for="item in resultTypeOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -17,7 +17,7 @@
       </el-form-item>
       <el-button type="primary" size="small" plain class="custom-button-in-toolbar" style="margin-top: 10px;" @click="inquire">查询</el-button>
     </el-form>
-    <el-table :height="tableHeight" :data="tableData" border stripe header-cell-class-name="custom-header-cell" style="width: 100%">
+    <el-table :height="tableAutoHeight" :data="tableData" border stripe header-cell-class-name="custom-header-cell" style="width: 100%">
       <el-table-column label="序号" align="center" width="70">
         <template slot-scope="scope"><span>{{scope.$index+(inquires.pageIndex - 1) * inquires.pageSize + 1}} </span></template>
       </el-table-column>
@@ -58,6 +58,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      style="text-align: center;box-sizing: border-box"
+      class="reduce-height-element"
+      ref="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="inquires.pageIndex"
+      :page-size="inquires.pageSize"
+      layout="total, prev, pager, next"
+      :total="totalNumber">
+    </el-pagination>
     <!----------------------------查看对话框-------------------------------->
     <el-dialog :close-on-click-modal="false" :title="titleName" @closed="letterClueFormDialogClosedHandler()" width="840px" :visible.sync="dialogFormVisible">
       <div v-loading="IsLoading">
@@ -85,28 +96,19 @@
         <el-button type="primary" @click="submitProcessingType">确 定</el-button>
       </div>
     </el-dialog>
-    <el-pagination
-      style="text-align: center;box-sizing: border-box"
-      ref="pagination"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page.sync="inquires.pageIndex"
-      :page-size="inquires.pageSize"
-      layout="total, prev, pager, next"
-      :total="totalNumber">
-    </el-pagination>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
   import Img from 'src/assets/img';
   import DataDictionaryApi from 'src/api/data-dictionary-api';
   import LetterClueApi from 'src/api/letter-clue-api';
   import { showResMsg } from 'src/utils/operation-result-message';
   import LetterClue from './LetterClue';
+  import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
 
   export default {
+    mixins:[SimpleAutoHeightTable],
     name: 'letterClueClassify',
     data() {
       return {
@@ -121,7 +123,6 @@
         changeInfo: {},
         dialogFormVisible: false,
         processingTypeDialog: false,
-        tableHeight: 0,
         tableData: [],
         threadOptions: [],
         rankOptions: [],
@@ -146,20 +147,7 @@
     components: {
       LetterClue,
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val - this.$refs.pagination.$el.offsetHeight - this.$refs.elForm.$el.offsetHeight;
-      },
-    },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
-    },
     created() {
-      this.$nextTick(() => {
-        this.tableHeight = this.contentHeight - this.$refs.pagination.$el.offsetHeight - this.$refs.elForm.$el.offsetHeight;
-      });
       this.fetchData();
       // 线索分类类型
       DataDictionaryApi.getDictionary({ listUrl: '/dic/resulttype/all', isDelete: false })
@@ -329,12 +317,5 @@
 </script>
 
 <style scoped>
-  .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 14px;
-    padding-right: 8px;
-  }
+
 </style>

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" @tab-click="handleClick" ref="Tabs">
-      <el-tab-pane :key="item.name" v-for="item in editableTabs" :label="item.title" :name="item.name"></el-tab-pane>
+    <el-tabs v-model="activeName" @tab-click="handleClick" class="reduce-height-element">
+      <el-tab-pane :key="item.name" v-for="item in editableTabs" :label="item.title" class="reduce-height-element" :name="item.name"></el-tab-pane>
     </el-tabs>
-    <el-form :inline="true" ref="TopForm" class="form-top" >
+    <el-form :inline="true" ref="TopForm" class="form-top reduce-height-element" >
       <el-form-item >
         <el-button type="primary" size="small" plain class="custom-button-in-toolbar" v-if="typeConceal" icon="el-icon-circle-plus-outline" @click="addDataFunction">增加</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border stripe header-cell-class-name="custom-header-cell" :height="tableHeight" style="width: 100%">
+    <el-table :data="tableData" border stripe header-cell-class-name="custom-header-cell" :height="tableAutoHeight" style="width: 100%">
       <el-table-column type="index" align="center" width="50" label="序号"></el-table-column>
       <el-table-column prop="name" align="center" sortable label="名称"></el-table-column>
       <el-table-column prop="indexNumber" align="center" sortable label="排序"></el-table-column>
@@ -42,11 +42,12 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
   import DataDictionaryApi from 'src/api/data-dictionary-api';
-  import { showResMsg } from '../../../utils/operation-result-message';
+  import { showResMsg } from 'src/utils/operation-result-message';
+  import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
 
   export default {
+    mixins: [SimpleAutoHeightTable],
     name: 'DataDictionary',
     data() {
       return {
@@ -62,7 +63,6 @@
         typeConceal: true,
         dialogTitle: '',
         tableData: [],
-        tableHeight: 0,
         activeName: '1',
         tabLabelWatch: '',
         urlData: {
@@ -92,15 +92,9 @@
         ],
       };
     },
-    watch: {
-      contentHeight(val) {
-        this.tableHeight = val - this.$refs.Tabs.$el.offsetHeight - this.$refs.TopForm.$el.offsetHeight;
-      },
-    },
+
     created() {
-      this.$nextTick(() => {
-        this.tableHeight = this.contentHeight - this.$refs.Tabs.$el.offsetHeight - this.$refs.TopForm.$el.offsetHeight;
-      });
+
       this.urlData.listUrl = '/dic/jobtype/all';
       this.urlData.addDeleteChange = '/dic/jobtype';
       this.tabLabelWatch = '干部类型管理';
@@ -218,11 +212,7 @@
 
       },
     },
-    computed: {
-      ...mapGetters({
-        contentHeight: 'getContentHeight',
-      }),
-    },
+
   };
 </script>
 
