@@ -12,7 +12,7 @@ export default [
     meta: { hidden: true, title: '登录', value: 'login' },
   }, {
     path: '/home',
-    component: () => import('src/views/Home'),
+    component: () => import('src/views/Layout'),
     meta: { hidden: true, title: '首页', value: 'home' },
     children: [{
       path: '/',
@@ -23,7 +23,7 @@ export default [
   }, {
     path: '/letClue',
     name: 'letClue',
-    component: () => import('src/views/Home'),
+    component: () => import('src/views/Layout'),
     meta: { title: '线索管理', value: '7' },
     children: [
       {
@@ -42,7 +42,7 @@ export default [
   {
     path: '/manage',
     name: 'manage',
-    component: () => import('src/views/Home'),
+    component: () => import('src/views/Layout'),
     meta: { auth: true, title: '系统管理', value: '1', },
     children: [
       {

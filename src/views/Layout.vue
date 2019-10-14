@@ -46,9 +46,9 @@
 
 <script>
   import { mapGetters, mapMutations } from 'vuex';
-  import Sidebar from 'src/views/content/common/Sidebar';
-  import Breadcrumb from 'src/views/content/common/Breadcrumb';
-  import TagsBar from 'src/views/content/common/TagsBar';
+  import Sidebar from 'src/views/content/common/layout/Sidebar';
+  import Breadcrumb from 'src/views/content/common/layout/Breadcrumb';
+  import TagsBar from 'src/views/content/common/layout/TagsBar';
   import Img from 'src/assets/img';
   import types from 'src/store/mutation-types';
   import HomeApi from 'src/api/home-api';
