@@ -123,7 +123,7 @@
         if (formData !== undefined) {
           this.fileListForShow = JSON.parse(JSON.stringify(formData.letClueForm.fileList));
           this.letClueForm = formData.letClueForm;
-          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList);
+          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList,this.canEdit);
           this.titleName = formData.canEdit ? '修改' : '查看';
           this.canEdit = formData.canEdit;
           this.isCreate = formData.isCreate;

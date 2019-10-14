@@ -1,10 +1,11 @@
 <template>
   <div>
-    <el-form-item >
+    <el-form-item>
       <el-upload
         :action="Global.URL+'/stuff/file'"
         :headers="headers"
         class="upload-demo"
+        :class="{'hide-upload-button':!canEdit}"
         drag
         ref="CustomCardFileUploader"
         multiple
@@ -15,7 +16,7 @@
         :on-success="onSuccessHandler"
         :file-list="fileListForShow"
       >
-        <div slot="default" style="font-size: 15px;line-height: 15px">
+        <div slot="default" style="font-size: 15px;line-height: 15px;">
           <i class="el-icon-upload"><span style="font-size: 15px;line-height: 15px">上传附件</span></i>
           <br>
           <span style="color: #409eff">拖拽至此<span style="color:gray">或</span>点击上传</span>
@@ -23,7 +24,6 @@
         <div slot="file" style="position: relative;height: 100%;" slot-scope="{file}">
           <div style="height: 100%;" v-for="fileComponentInfo in [getFileComponentInfo(file)]">
             <div style="background-repeat: no-repeat;background-position: center;height: 100%" :style="{backgroundImage: ('url(\''+fileComponentInfo.icon+'\')'),backgroundSize:(fileComponentInfo.isShowPreview?'cover':'70%')}"></div>
-            <!--<img :src="fileComponentInfo.icon" height="90%" :alt="file.name">-->
             <div style="position: absolute;top:0;left:0;height: 100%;width: 100%;">
               <div style="position: absolute;top:0;left:0;height: 100%;width: 100%;background-color: #666666;opacity: 0.65"></div>
               <div style="position: relative;color:#ffffff;font-weight: bold;margin-left: 5px">{{file.name}}</div>
@@ -35,7 +35,7 @@
                   <span class="el-upload-list__item-delete">
                     <i class="el-icon-download" @click="downloadFile(file.url,file.name)"></i>
                   </span>
-                  <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                  <span class="el-upload-list__item-delete" v-if="canEdit" @click="handleRemove(file)">
                     <i class="el-icon-delete"></i>
                   </span>
                 </span>
@@ -67,11 +67,13 @@
         headers: {
           Authorization: getToken(),
         },
+        canEdit: true,
       };
     },
     methods: {
-      initFileList(fileList) {
+      initFileList(fileList, canEdit) {
         this.fileListForShow = fileList;
+        this.canEdit = canEdit === undefined ? true : canEdit;
         this.makeFileListForForm();
       },
       clearFileList() {
@@ -88,6 +90,8 @@
         //成功上传后虽然视图已经变更，但组件绑定的file-list参数"fileList"为单向绑定，组件不会将fileListForShow更新，需自己实现更新此参数
         this.fileListForShow = fileList;
         this.makeFileListForForm();
+        this.$emit('on-success', this.fileListForForm);
+        this.$emit('on-change', this.fileListForForm);
       },
       handleRemove(file) {
         this.$refs.CustomCardFileUploader.abort(file); // upload: el-upload的ref值；file:File类型，file文件本身
@@ -121,7 +125,7 @@
           }
           fileListForForm.push(f);
         });
-       this.fileListForForm= fileListForForm;
+        this.fileListForForm = fileListForForm;
       },
       getFileComponentInfo(item) {
         let fileInfo = {
@@ -213,5 +217,31 @@
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+    out-line: none;
+    color: #ffffff;
+  }
 
+  /deep/ .el-upload-dragger {
+    background-color: #fff;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /deep/ .el-upload-list__item {
+    transition: none !important;
+  }
+
+
+  /deep/ .hide-upload-button .el-upload--picture-card {
+    display: none;
+  }
 </style>
