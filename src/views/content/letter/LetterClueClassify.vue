@@ -241,7 +241,7 @@
             };
             this.dialogFormVisible = true;
             this.$nextTick(() => {//子组件加载完后再调用其中方法
-              this.$refs.LetterClueForm.iniFormDataForEdit(this.changeInfo);
+              this.$refs.LetterClueForm.iniFormDataForEdit(this.changeInfo,this.canEdit);
             });
           });
 

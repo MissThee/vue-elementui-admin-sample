@@ -13,26 +13,31 @@
         </el-select>
       </el-form-item>
       <el-form-item label="被反映人">
-        <el-form label-width="90px" class="card-style" :model="item" size="mini" style="margin-top:5px;background-color: #fafafa; " v-for="(item, index) in letClueForm.letDefendantList" v-bind:key="index" :disabled="!canEdit">
-          <el-form-item label="姓名">
-            <el-input v-model="item.name" style="width: 70%"></el-input>
-            <el-button type="danger" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" style="float:right" @click="deleteDefendant(item, index)">删除此反映人</el-button>
-          </el-form-item>
-          <el-form-item label="单位与职务">
-            <el-input v-model="item.companyName" style="width: 70%"></el-input>
-          </el-form-item>
-          <el-form-item label="职级">
-            <el-select v-model="item.jobRankId" placeholder="请选择" style="width: 70%">
-              <el-option v-for="item in rankOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="干部类型">
-            <el-select v-model="item.jobTypeIdList" multiple placeholder="请选择" style="width: 70%">
-              <el-option v-for="item in cadreOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-button type="success" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="addGroup">添加被反映人</el-button>
+        <div :class="{'trans-animation':enableAnimate}" style="position:relative" :style="{height:letClueForm.letDefendantList.length*180+'px'}">
+          <transition-group :name="enableAnimate?'defendant-card-animate':''" @after-leave="enableAnimate=false"  mode="in-out">
+            <el-form label-width="90px" class="card-style inner-card" :class="{'trans-animation':enableAnimate}" :style="{top:index*180+'px'}" :model="item" size="mini" v-for="(item, index) in letClueForm.letDefendantList" v-bind:key="item.nodeId===undefined?item.id:item.nodeId"
+                     :disabled="!canEdit">
+              <el-form-item label="姓名">
+                <el-input v-model="item.name" style="width: 70%"></el-input>
+                <el-button type="danger" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" style="float:right" @click="deleteDefendant(item, index)">删除此被反映人</el-button>
+              </el-form-item>
+              <el-form-item label="单位与职务">
+                <el-input v-model="item.companyName" style="width: 70%"></el-input>
+              </el-form-item>
+              <el-form-item label="职级">
+                <el-select v-model="item.jobRankId" placeholder="请选择" style="width: 70%">
+                  <el-option v-for="item in rankOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="干部类型">
+                <el-select v-model="item.jobTypeIdList" multiple placeholder="请选择" style="width: 70%">
+                  <el-option v-for="item in cadreOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </transition-group>
+        </div>
+        <el-button type="success" size="small" plain v-if="canEdit" class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="addGroup">添加被反映人</el-button>
       </el-form-item>
       <el-form-item label="主要问题">
         <el-input type="textarea" autosize :rows="2" v-model="letClueForm.content" style="width: 100%;"></el-input>
@@ -52,7 +57,7 @@
         <file-uploader ref="FileUploader"></file-uploader>
       </el-form-item>
       <el-form-item style="text-align: center">
-        <el-button type="primary" size="large" style="margin-left: -80px" icon="el-icon-circle-check" @click="submitGroup">提交</el-button>
+        <el-button v-if="canEdit" type="primary" size="large" style="margin-left: -80px" icon="el-icon-circle-check" @click="submitGroup">提交</el-button>
       </el-form-item>
     </el-form>
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" append-to-body title="图片预览">
@@ -76,7 +81,7 @@
     data() {
       return {
         titleName: '增加',
-
+        enableAnimate: false,
         dicSource: [],
         dicIllegal: [],
         dicArea: [],
@@ -114,7 +119,7 @@
       };
     },
 
-    mounted() {
+    created() {
       this.initSelectorData();
       this.letClueForm = JSON.parse(JSON.stringify(this.letClueFormEmpty));
     },
@@ -123,7 +128,7 @@
         if (formData !== undefined) {
           this.fileListForShow = JSON.parse(JSON.stringify(formData.letClueForm.fileList));
           this.letClueForm = formData.letClueForm;
-          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList,this.canEdit);
+          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList,formData.canEdit);
           this.titleName = formData.canEdit ? '修改' : '查看';
           this.canEdit = formData.canEdit;
           this.isCreate = formData.isCreate;
@@ -157,10 +162,13 @@
           });
       },
       deleteDefendant(item, index) {
+        this.enableAnimate = true;
         this.letClueForm.letDefendantList.splice(index, 1);
       },
       addGroup() {
+        this.enableAnimate = true;
         this.letClueForm.letDefendantList.push({
+          nodeId: new Date().getTime(),
           name: '',
           companyName: '',
           jobRankId: '',
@@ -226,5 +234,40 @@
 
   /deep/ .el-upload-list__item {
     transition: none !important;
+  }
+</style>
+<style scoped>
+  .defendant-card-animate-leave-active {
+    animation: animate2 0.4s;
+  }
+
+  .defendant-card-animate-enter-active {
+    animation: animate2 0.4s reverse;
+  }
+
+  .trans-animation {
+    transition: all 0.4s;
+  }
+
+  @keyframes animate1 {
+    0% {
+      opacity: 0;
+      transform: translateY(-170px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes animate2 {
+    0% {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100px);
+    }
   }
 </style>
