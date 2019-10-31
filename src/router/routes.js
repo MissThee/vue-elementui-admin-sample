@@ -1,3 +1,9 @@
+
+
+//meta中为自定义变量
+//hidden： 是否显示在侧边栏
+//title：  侧边栏名称
+//value：  绑定的权限值（此值与用户的权限值permissionList关联，决定显示哪些路由）
 export default [
   {
     path: '/',
@@ -13,13 +19,23 @@ export default [
   }, {
     path: '/home',
     component: () => import('src/views/Layout'),
-    meta: { hidden: true, title: '首页', value: 'home' },
+    meta: { hidden: false, title: '首页', value: 'home' },
     children: [{
-      path: '/',
+      path: '',
       name: 'passHomepage',
       component: () => import('src/views/content/homepage/HomePage'),
       meta: { title: '首页' },
-    },],
+    },{
+      path: 'home1',
+      component: () => import('src/views/Layout'),
+      meta: { hidden: false, title: '一层', value: 'home1' },
+      children: [{
+        path: 'er',
+        name: 'passHomepage',
+        component: () => import('src/views/content/homepage/HomePage'),
+        meta: {hidden: false, title: '二层' },
+      }],
+    }],
   }, {
     path: '/letClue',
     name: 'letClue',

@@ -1,6 +1,6 @@
 <template>
   <el-menu mode="vertical" class="el-menu-vertical-demo" router :default-active="$route.path" background-color="#545c64" text-color="#fff" active-text-color="#409EFF">
-    <sidebar-item :routes="sideNavigation"></sidebar-item>
+    <sidebar-item :routes="sideNavigationRoutes"></sidebar-item>
   </el-menu>
 </template>
 
@@ -14,38 +14,30 @@
     components: { SidebarItem },
     data() {
       return {
-        sideNavigation: JSON.parse(JSON.stringify(routes)),
+        sideNavigationRoutes: JSON.parse(JSON.stringify(routes)),
         activeIndex: ''
       };
     },
     created() {
+      //获取用户信息
       let loginInfo = getLoginInfo();
+      //检查用户信息不为空时，执行侧边栏菜单过滤方法
       if (loginInfo !== undefined && loginInfo !== null && loginInfo.length > 0) {
-        const sideBarData = JSON.parse(loginInfo).user.permissionValueList;
-        sideBarData.forEach((infoItem) => {
-          this.sideNavigation.forEach((treeItem) => {
-            if (sideBarData.indexOf('[ADMIN]') !== -1) {
-              treeItem.state = true;
-              if (treeItem.children !== undefined) {
-                treeItem.children.forEach((treeSecItem) => {
-                  treeSecItem.state = true;
-                });
-              }
-              return;
-            }
-            if (treeItem.children !== undefined) {
-              treeItem.children.forEach((treeSecItem) => {
-                if (treeSecItem.meta.value === infoItem.toString()) {
-                  treeSecItem.state = true;
-                  treeItem.state = true;
-                }
-              });
-              return;
-            }
-            if (treeItem.meta.value === infoItem.toString()) {
-              treeItem.state = true;
-            }
-          });
+        const sideBarPermissionValueList = JSON.parse(loginInfo).user.permissionValueList;
+        this.setStateForSideNavigationRoutes(this.sideNavigationRoutes, sideBarPermissionValueList);
+      }
+    },
+    methods: {
+      //为侧边栏菜单设置state属性，控制显示或隐藏
+      setStateForSideNavigationRoutes(routes, sideBarPermissionValueList) {
+        routes.forEach((route) => {
+          //有[ADMIN]权限时，认定为管理员，显示所有菜单
+          if (sideBarPermissionValueList.indexOf('[ADMIN]') > 0 || route.meta && sideBarPermissionValueList.indexOf(route.meta.value) > 0) {
+            route.state = true;
+          }
+          if (route.children) {
+            this.setStateForSideNavigationRoutes(route.children,sideBarPermissionValueList);
+          }
         });
       }
     },

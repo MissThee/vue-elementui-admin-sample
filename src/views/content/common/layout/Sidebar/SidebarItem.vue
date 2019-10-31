@@ -1,16 +1,16 @@
 <template>
   <div>
-    <template v-for="item in routes" v-if="!item.hidden&&item.children">
-      <el-submenu v-if="!item.meta.hidden&&item.children !== undefined && item.state === true" :index="item.name||item.path" :key="item.name">
+    <template v-for="item in routes">
+      <el-submenu v-if="!item.meta.hidden && item.state" :index="item.path.indexOf('/')===0?item.path: item.path+'/'+item.path" :key="item.path">
         <template slot="title">
-          <img v-if="item.meta&&item.meta.icon" :icon-class="item.meta.icon" height="20px" alt="" :src="item.meta.icon"/>
-          <span v-if="item.meta&&item.meta.title">{{item.meta.title}}</span>
+          <img :src="getIcon(item)" height="20px" alt=""/>
+          <span>{{getTitle(item)}}</span>
         </template>
-        <template  v-for="child in item.children" v-if="!child.hidden">
-          <sidebar-item v-if="child.children&&child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
-          <el-menu-item v-if="!child.meta.hidden && child.state === true" :index="child.path.indexOf('/')===0?child.path: item.path+'/'+child.path">
-            <img v-if="child.meta&&child.meta.icon" :src="child.meta.icon" height="20px" alt=""/>
-            <span v-if="child.meta&&child.meta.title">{{child.meta.title}}</span>
+        <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
+          <sidebar-item v-if="itemChild.children" :routes="[itemChild]"></sidebar-item>
+          <el-menu-item v-if="!itemChild.meta.hidden && !itemChild.children && itemChild.state" :index="itemChild.path.indexOf('/')===0?itemChild.path: item.path+'/'+itemChild.path">
+            <img :src="getIcon(itemChild)" height="20px" alt=""/>
+            <span>{{getTitle(itemChild)}}</span>
           </el-menu-item>
         </template>
       </el-submenu>
@@ -27,7 +27,25 @@
         type: Array
       }
     },
-    methods: {}
+    methods: {
+      checkNodeIsShow(item) {
+
+      },
+      getIcon(item) {
+        if (item) {
+          if (item.meta) {
+            return item.meta.icon;
+          }
+        }
+      },
+      getTitle(item) {
+        if (item) {
+          if (item.meta) {
+            return item.meta.title;
+          }
+        }
+      }
+    }
   };
 </script>
 

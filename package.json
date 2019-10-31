@@ -2,7 +2,7 @@
   "name": "commission-discipline-inspection",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "wangjingwen <809507331@qq.com>",
+  "author": "forget",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 8200",
