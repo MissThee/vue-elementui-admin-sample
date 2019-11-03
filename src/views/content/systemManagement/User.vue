@@ -1,43 +1,56 @@
 <template>
   <div>
-    <el-form :inline="true" class="form-top reduce-height-element" >
-      <el-form-item >
+    <el-form :inline="true" class="form-top reduce-height-element">
+      <el-form-item>
         <el-button type="primary" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="prepareAdd">增加</el-button>
       </el-form-item>
     </el-form>
-    <template>
-      <el-table :data="tableData" border header-cell-class-name="custom-header-cell" :height="tableAutoHeight" stripe style="width: 100%">
-        <el-table-column type="index" align="center" label="序号" width="50"></el-table-column>
-        <el-table-column prop="username" align="center" width="150" label="用户名" sortable></el-table-column>
-        <el-table-column prop="nickname" align="center" width="150" label="昵称" sortable></el-table-column>
-        <el-table-column prop="unitName" align="center" min-width="120" label="所属组织机构名称" sortable></el-table-column>
-        <el-table-column prop="roleList" align="left" min-width="200" label="账号角色" sortable>
-          <template slot-scope="scope">
+
+    <el-table :data="tableData" border header-cell-class-name="custom-header-cell" :height="tableAutoHeight" stripe style="width: 100%">
+      <el-table-column label="序号" align="center" width="70">
+        <template slot-scope="scope"><span>{{scope.$index+(searchForm.pageNum - 1) * searchForm.pageSize + 1}} </span></template>
+      </el-table-column>
+      <el-table-column prop="username" align="center" width="150" label="用户名" sortable></el-table-column>
+      <el-table-column prop="nickname" align="center" width="150" label="昵称" sortable></el-table-column>
+      <el-table-column prop="unitName" align="center" min-width="120" label="所属组织机构名称" sortable></el-table-column>
+      <el-table-column prop="roleList" align="left" min-width="200" label="账号角色" sortable>
+        <template slot-scope="scope">
             <span v-for="item in scope.row.roleList">
               <el-tag style="margin-left: 2px;margin-top:2px" :type="item.isEnable ?'primary':'danger'" size="mini">{{item.name}}</el-tag>
             </span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="isEnable" align="center" width="80" label="状态" sortable>
-          <template slot-scope="scope">
-            <el-tag style="margin-left: 2px" :type="scope.row.isEnable ?'primary':'danger'" size="mini"> {{ scope.row.isEnable === true ? '可用' : '停用' }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" width="220" align="center" label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" plain class="custom-button-in-table" icon="el-icon-edit"
-                       @click="prepareUpdate(scope.$index, scope.row)">修改
-            </el-button>
-            <el-button type="danger" size="mini" plain class="custom-button-in-table" icon="el-icon-delete"
-                       @click="userDelete(scope.$index, scope.row)">删除
-            </el-button>
-            <el-button type="warning" size="mini" plain class="custom-button-in-table" icon="el-icon-refresh"
-                       @click="resetPassword(scope.$index, scope.row)">重置密码
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </template>
+        </template>
+      </el-table-column>
+      <el-table-column prop="isEnable" align="center" width="80" label="状态" sortable>
+        <template slot-scope="scope">
+          <el-tag style="margin-left: 2px" :type="scope.row.isEnable ?'primary':'danger'" size="mini"> {{ scope.row.isEnable === true ? '可用' : '停用' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" width="220" align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" plain class="custom-button-in-table" icon="el-icon-edit"
+                     @click="prepareUpdate(scope.$index, scope.row)">修改
+          </el-button>
+          <el-button type="danger" size="mini" plain class="custom-button-in-table" icon="el-icon-delete"
+                     @click="userDelete(scope.$index, scope.row)">删除
+          </el-button>
+          <el-button type="warning" size="mini" plain class="custom-button-in-table" icon="el-icon-refresh"
+                     @click="resetPassword(scope.$index, scope.row)">重置密码
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      style="text-align: center;box-sizing: border-box"
+      class="reduce-height-element"
+      ref="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="searchForm.pageNum"
+      :page-size="searchForm.pageSize"
+      :page-sizes="[10,20,30,40,50,100, 200, 300, 400,500]"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalNumber">
+    </el-pagination>
     <!------------增加修改弹窗----------->
     <el-dialog :close-on-click-modal="false" :title="(isCreate?'增加':'修改')+'用户'" width="600px" :visible.sync="isShowAddOrUpdateDialog">
       <el-form ref="addOrUpdateForm" :model="form" label-position="right" label-width="80px">
@@ -99,6 +112,7 @@
         },
         isCreate: true,
         tableData: [],
+        totalNumber: 0,
         unitTreeData: [],
         isShowAddOrUpdateDialog: false,
         isShowPasswordEditor: false,
@@ -111,7 +125,12 @@
           unitId: [],
           username: '',
         },
-        isDelete: false,
+        searchForm: {
+          pageNum: 1,
+          pageSize: 100,
+          isDelete: false,
+          orderBy: {},
+        },
         roleData: [],
       };
     },
@@ -130,7 +149,11 @@
         });
 
       this.fetchData();
-      RoleApi.getRoleList({ isDelete: this.isDelete, orderBy: { name: true, } })
+      RoleApi.getRoleList({
+          isDelete: this.isDelete,
+          orderBy: { name: true, }
+        }
+      )
         .then(({ data }) => {
           this.roleData = data.data.roleList;
         });
@@ -140,12 +163,10 @@
         this.form.unitId = cascaderValue(item);
       },
       fetchData() {
-        UserApi.getUserList({
-          isDelete: this.isDelete,
-          orderBy: {},
-        })
+        UserApi.getUserList(this.searchForm)
           .then(({ data }) => {
             this.tableData = data.data.userList;
+            this.totalNumber = data.data.total;
           });
       },
       commitAddOrUpdate() {
@@ -219,6 +240,14 @@
                 showResMsg(data);
               });
           });
+      },
+      handleSizeChange(val) {
+        this.searchForm.pageSize = val;
+        this.fetchData();
+      },
+      handleCurrentChange(val) {
+        this.searchForm.pageNum = val;
+        this.fetchData();
       },
     },
 

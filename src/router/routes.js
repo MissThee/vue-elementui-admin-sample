@@ -19,22 +19,12 @@ export default [
   }, {
     path: '/home',
     component: () => import('src/views/Layout'),
-    meta: { hidden: false, title: '首页', value: 'home' },
+    meta: { hidden: true, title: '首页', value: 'home' },
     children: [{
       path: '',
       name: 'passHomepage',
       component: () => import('src/views/content/homepage/HomePage'),
       meta: { title: '首页' },
-    },{
-      path: 'home1',
-      component: () => import('src/views/Layout'),
-      meta: { hidden: false, title: '一层', value: 'home1' },
-      children: [{
-        path: 'er',
-        name: 'passHomepage',
-        component: () => import('src/views/content/homepage/HomePage'),
-        meta: {hidden: false, title: '二层' },
-      }],
     }],
   }, {
     path: '/letClue',

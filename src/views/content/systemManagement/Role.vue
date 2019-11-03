@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div style="width: 50%;float: left" >
+    <div style="width: 50%;float: left">
       <el-table :data="tableData" border :height="tableAutoHeight" stripe header-cell-class-name="custom-header-cell" @row-click="rowClickHandler" style="width: 100%">
-        <el-table-column type="index" align="center" width="50" label="序号"></el-table-column>
+        <el-table-column label="序号" align="center" width="70">
+          <template slot-scope="scope"><span>{{scope.$index+(searchForm.pageNum - 1) * searchForm.pageSize + 1}} </span></template>
+        </el-table-column>
         <el-table-column prop="name" align="center" sortable min-width="150" label="角色名"></el-table-column>
         <el-table-column prop="isEnable" align="center" sortable width="80" label="状态">
           <template slot-scope="scope">
@@ -15,6 +17,18 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        style="text-align: center;box-sizing: border-box"
+        class="reduce-height-element"
+        ref="pagination"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="searchForm.pageNum"
+        :page-size="searchForm.pageSize"
+        :page-sizes="[10,20,30,40,50,100, 200, 300, 400,500]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalNumber">
+      </el-pagination>
     </div>
     <div style="width: 50%;float: left;overflow: auto" :style="{height:tableAutoHeight+'px'}">
       <el-card>
@@ -68,6 +82,7 @@
         isUpdate: undefined,
         thisRowId: '',
         tableData: [],
+        totalNumber: 0,
         permissionTree: [],
         form: {},
         formEmpty: {
@@ -77,12 +92,17 @@
           permissionIdList: [],
         },
         treeSelect: [],
-        isDelete: false,
+        searchForm:{
+          pageNum: 1,
+          pageSize: 100,
+          isDelete: false,
+          orderBy: { name: true }
+        },
         transferParameters: {
           isDelete: false,
           orderBy: {
-            name: true,
             index_num: true,
+            name: true,
           },
           rootId: 0,
         },
@@ -99,9 +119,10 @@
     },
     methods: {
       fetchData() {
-        RoleApi.getRoleList({ isDelete: this.isDelete, orderBy: { name: true } })
+        RoleApi.getRoleList(this.searchForm)
           .then(({ data }) => {
             this.tableData = data.data.roleList;
+            this.totalNumber = data.data.total;
           });
       },
       initPermissionTree() {
@@ -148,12 +169,20 @@
               let node = permissionTreeEL.getNode(nodeId);
               if (node !== undefined && node !== null) {
                 if (!node.isLeaf) {
-                    permissionIdList.splice(permissionIdList.indexOf(nodeId),1);
-                  }
+                  permissionIdList.splice(permissionIdList.indexOf(nodeId), 1);
                 }
+              }
             }
             permissionTreeEL.setCheckedKeys(permissionIdList);
           });
+      },
+      handleSizeChange(val) {
+        this.searchForm.pageSize = val;
+        this.fetchData();
+      },
+      handleCurrentChange(val) {
+        this.searchForm.pageNum = val;
+        this.fetchData();
       },
       roleDelete(index, row) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

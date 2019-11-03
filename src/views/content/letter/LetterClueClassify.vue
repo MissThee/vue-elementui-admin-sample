@@ -66,7 +66,8 @@
       @current-change="handleCurrentChange"
       :current-page.sync="inquires.pageIndex"
       :page-size="inquires.pageSize"
-      layout="total, prev, pager, next"
+      :page-sizes="[10,20,30,40,50,100, 200, 300, 400,500]"
+      layout="total, sizes, prev, pager, next, jumper"
       :total="totalNumber">
     </el-pagination>
     <!----------------------------查看对话框-------------------------------->
@@ -218,7 +219,6 @@
         this.fetchData();
       },
       handleCurrentChange(val) {
-        this.inquires.pageIndex = val;
         this.inquires.pageIndex = val;
         this.fetchData();
       },
