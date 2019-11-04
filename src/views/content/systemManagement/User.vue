@@ -82,8 +82,8 @@
         <el-form-item label="管理员:">
           <el-switch
             v-model="form.isAdmin"
-            active-text="否"
-            inactive-text="是">
+            active-text="是"
+            inactive-text="否">
             >
           </el-switch>
         </el-form-item>
