@@ -25,6 +25,11 @@
           <el-tag style="margin-left: 2px" :type="scope.row.isEnable ?'primary':'danger'" size="mini"> {{ scope.row.isEnable === true ? '可用' : '停用' }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="isAdmin" align="center" width="80" label="管理员" sortable>
+        <template slot-scope="scope">
+          <el-tag style="margin-left: 2px" :type="scope.row.isAdmin ?'primary':'info'" size="mini"> {{ scope.row.isAdmin === true ? '管理员' : '用户' }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" width="220" align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" plain class="custom-button-in-table" icon="el-icon-edit"
@@ -74,6 +79,14 @@
             >
           </el-switch>
         </el-form-item>
+        <el-form-item label="管理员:">
+          <el-switch
+            v-model="form.isAdmin"
+            active-text="否"
+            inactive-text="是">
+            >
+          </el-switch>
+        </el-form-item>
         <el-form-item label="角色:">
           <el-checkbox-group
             v-model="form.roleIdList">
@@ -119,6 +132,7 @@
         form: {},
         formEmpty: {
           isEnable: true,
+          isAdmin: false,
           nickname: '',
           password: '',
           roleIdList: [],
