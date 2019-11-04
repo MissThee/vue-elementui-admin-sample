@@ -30,11 +30,12 @@
         :total="totalNumber">
       </el-pagination>
     </div>
-    <div style="width: 50%;float: left;overflow: auto" :style="{height:tableAutoHeight+'px'}">
-      <el-card>
-        <div slot="header" style="height: 30px;font-size:20px;font-weight: bold">
-          <span>{{isUpdate?'修改':'新建'}}{{(form.name===undefined||form.name===''?'':'【')+form.name+(form.name===undefined||form.name===''?'':'】')}}</span>
-        </div>
+
+    <div style="width: 50%;float: left;overflow: hidden;border: 1px solid #ccc;box-sizing: border-box;border-radius: 5px" >
+      <div slot="header" style="height: 30px;font-size:20px;font-weight: bold;border-bottom: 1px solid #ccc;padding:0 30px ">
+        <span>{{isUpdate?'修改':'新建'}}{{(form.name===undefined||form.name===''?'':'【')+form.name+(form.name===undefined||form.name===''?'':'】')}}</span>
+      </div>
+      <div :style="{height:tableAutoHeight-70+'px'}" style="overflow: scroll">
         <el-form :model="form" label-position="right" label-width="130px">
           <el-form-item label="角色名称:">
             <el-input v-model="form.name"></el-input>
@@ -58,13 +59,14 @@
               </el-tree>
             </el-scrollbar>
           </el-form-item>
-          <el-form-item>
-            <el-button type="success" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="addRoleFunction">新建</el-button>
-            <el-button type="primary" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-check" @click="addAmendConfirm">保存</el-button>
-          </el-form-item>
         </el-form>
-      </el-card>
+      </div>
+      <div style="height: 30px;border-top: 1px solid #ccc;padding:10px 30px;text-align: center">
+        <el-button type="success" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="addRoleFunction">清空/新建</el-button>
+        <el-button type="primary" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-check" @click="addAmendConfirm">保存</el-button>
+      </div>
     </div>
+
   </div>
 </template>
 
