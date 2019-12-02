@@ -45,12 +45,11 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex';
+  import { mapActions} from 'vuex';
   import Sidebar from 'src/views/content/common/layout/Sidebar';
   import Breadcrumb from 'src/views/content/common/layout/Breadcrumb';
   import TagsBar from 'src/views/content/common/layout/TagsBar';
   import Img from 'src/assets/img';
-  import types from 'src/store/mutation-types';
   import HomeApi from 'src/api/home-api';
   import { Notification } from 'element-ui';
   import { getLoginInfo, removeLoginInfo, removeToken } from '../utils/cookies';
@@ -89,9 +88,9 @@
       };
     },
     methods: {
-      ...mapMutations({
-        setContentHeight: types.SET_CONTENT_HEIGHT,
-        setContentWidth: types.SET_CONTENT_WIDTH,
+      ...mapActions({
+        setContentHeight: 'layout/setContentHeight',
+        setContentWidth: 'layout/setContentWidth',
       }),
       dialogChangePersonalPassword() {
         if (this.form.oldPassword.length === 0) {

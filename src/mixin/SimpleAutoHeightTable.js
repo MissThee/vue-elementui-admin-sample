@@ -31,8 +31,8 @@ const SimpleAutoHeightTable = {
   },
   computed: {
     ...mapGetters({
-      contentHeight: 'getContentHeight',
-      contentWidth: 'getContentWidth',
+      contentHeight: 'layout/getContentHeight',
+      contentWidth: 'layout/getContentWidth',
     }),
   },
 };
