@@ -7,7 +7,7 @@
           <span>{{getTitle(item)}}</span>
         </template>
         <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
-          <sidebar-item v-if="itemChild.children" :routes="[itemChild]"></sidebar-item>
+          <side-bar-item v-if="itemChild.children" :routes="[itemChild]"></side-bar-item>
           <el-menu-item v-if="!itemChild.meta.hidden && !itemChild.children && itemChild.state" :index="itemChild.path.indexOf('/')===0?itemChild.path: item.path+'/'+itemChild.path">
             <img :src="getIcon(itemChild)" height="20px" alt=""/>
             <span>{{getTitle(itemChild)}}</span>
@@ -21,15 +21,13 @@
 <script>
 
   export default {
-    name: 'SidebarItem',
-    props: {
-      routes: {
-        type: Array
-      }
+    name: 'SideBarItem',
+    data() {
+      return { routes: [] };
     },
     methods: {
-      checkNodeIsShow(item) {
-
+      initMenu(routes) {
+        this.routes = routes;
       },
       getIcon(item) {
         if (item) {

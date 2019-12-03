@@ -1,39 +1,37 @@
 <template>
   <el-menu mode="vertical" class="el-menu-vertical-demo" router :default-active="$route.path" background-color="#545c64" text-color="#fff" active-text-color="#409EFF">
-    <sidebar-item :routes="sideNavigationRoutes"></sidebar-item>
+    <side-bar-item  ref="MenuItem"/>
   </el-menu>
 </template>
 
 <script>
-  import SidebarItem from './SidebarItem';
+  import SideBarItem from './SideBarItem';
 
   import routes from 'src/router/routes';
-  import { getLoginInfo } from 'src/utils/cookies';
 
   export default {
-    components: { SidebarItem },
+    components: { SideBarItem },
     data() {
       return {
         sideNavigationRoutes: JSON.parse(JSON.stringify(routes)),
         activeIndex: ''
       };
     },
-    created() {
-      //获取用户信息
-      let loginInfo = getLoginInfo();
-      //检查用户信息不为空时，执行侧边栏菜单过滤方法
-      if (loginInfo !== undefined && loginInfo !== null && loginInfo.length > 0) {
-        const sideBarPermissionValueList = JSON.parse(loginInfo).user.permissionValueList;
-        this.setStateForSideNavigationRoutes(this.sideNavigationRoutes, sideBarPermissionValueList);
-      }
-    },
+
     methods: {
+      initSideBar(permissionValueList) {
+        //获取用户信息
+        this.setStateForSideNavigationRoutes(this.sideNavigationRoutes, permissionValueList);
+        console.log(this.sideNavigationRoutes)
+        this.$refs.MenuItem.initMenu(this.sideNavigationRoutes);
+      },
       //为侧边栏菜单设置state属性，控制显示或隐藏
       setStateForSideNavigationRoutes(routes, sideBarPermissionValueList) {
         routes.forEach((route) => {
           //有[ADMIN]权限时，认定为管理员，显示所有菜单
           if (sideBarPermissionValueList.indexOf('[ADMIN]') > 0 || route.meta && sideBarPermissionValueList.indexOf(route.meta.value) > 0) {
             route.state = true;
+
           }
           if (route.children) {
             this.setStateForSideNavigationRoutes(route.children,sideBarPermissionValueList);

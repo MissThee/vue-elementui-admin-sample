@@ -74,7 +74,7 @@
   import { showResMsg } from 'src/utils/operation-result-message';
   import FileIcon from 'src/assets/img/file-icon/file-icon';
   import axios from 'axios';
-  import FileUploader from 'src/views/content/common/FileUploader';
+  import FileUploader from 'src/views/common/FileUploader';
   export default {
     name: 'letterClue',
     components: { FileUploader },

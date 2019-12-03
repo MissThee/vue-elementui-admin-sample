@@ -2,8 +2,8 @@ import Cookies from 'js-cookie';
 import router from 'src/router/index';
 import { Notification } from 'element-ui';
 
-const tokenKey = 'Admin-Token';
-const loginInfoKey = 'Admin-LoginInfo';
+const tokenKey = 'UserTokenKey';
+const loginInfoKey = 'UserLoginInfoKey';
 
 export function getToken() {
   let token = Cookies.get(tokenKey);
@@ -26,11 +26,11 @@ export function getLoginInfo() {
   if (loginInfo === undefined || loginInfo === null || loginInfo.length === 0) {
     noAuth();
   }
-  return loginInfo;
+  return JSON.parse(loginInfo);
 }
 
 export function setLoginInfo(value) {
-  return Cookies.set(loginInfoKey, value);
+  return Cookies.set(loginInfoKey, JSON.stringify(value));
 }
 
 export function removeLoginInfo() {

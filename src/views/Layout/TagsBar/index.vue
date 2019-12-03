@@ -1,6 +1,6 @@
 <template>
   <scroll-pane class='tags-view-container' ref='scrollPane'>
-    <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path">
+    <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in visitedViews" :to="tag.path" :key="tag.path">
       {{ tag.title }}
       <span class='el-icon-close' @click='closeViewTags(tag,$event)'></span>
     </router-link>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import ScrollPane from './ScrollPane/index';
+  import ScrollPane from './ScrollPanel';
 
   export default {
     data() {
