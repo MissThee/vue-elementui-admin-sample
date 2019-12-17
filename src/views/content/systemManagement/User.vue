@@ -185,18 +185,14 @@
       },
       commitAddOrUpdate() {
         if (this.isCreate) {
-          if (this.$checkNull(this.form)) {
-            UserApi.addUser(this.form)
-              .then(({ data }) => {
-                showResMsg(data);
-                if (data.result) {
-                  this.isShowAddOrUpdateDialog = false;
-                  this.fetchData();
-                }
-              });
-          } else {
-            this.$message.error('有未填写的信息');
-          }
+          UserApi.addUser(this.form)
+            .then(({ data }) => {
+              showResMsg(data);
+              if (data.result) {
+                this.isShowAddOrUpdateDialog = false;
+                this.fetchData();
+              }
+            });
         } else {
           UserApi.updateUser(this.form)
             .then(({ data }) => {

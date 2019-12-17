@@ -78,11 +78,6 @@
         } else {
           this.form.parentId = this.form.parentIdForVModel;
         }
-        const check = this.$checkNull(this.form);
-        if (!check) {
-          this.$message.error('请完善信息');
-          return;
-        }
         if (this.isUpdate) {
           UnitApi.updateUnit(this.form)
             .then(({ data }) => {

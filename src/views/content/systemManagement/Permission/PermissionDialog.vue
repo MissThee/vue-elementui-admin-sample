@@ -84,11 +84,7 @@
           }
         } else {
           this.form.parentId = this.form.parentIdForVModel;
-        }
-        if (!this.$checkNull(this.form)) {
-          this.$message.error('请完善信息');
-          return;
-        }
+        } 
         if (this.isUpdate) {
           PermissionApi.updatePermission(this.form)
             .then(({ data }) => {
