@@ -84,7 +84,7 @@
           }
         } else {
           this.form.parentId = this.form.parentIdForVModel;
-        } 
+        }
         if (this.isUpdate) {
           PermissionApi.updatePermission(this.form)
             .then(({ data }) => {

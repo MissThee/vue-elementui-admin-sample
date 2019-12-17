@@ -10,11 +10,11 @@
 
 /*缩小表单行间距*/
 .el-form-item {
-  margin-bottom: 5px;
-  margin-top: 5px;
+  /*margin-bottom: 5px;*/
+  /*margin-top: 5px;*/
 }
 .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
 }
 
 /*缩小按钮横向间距*/
@@ -31,7 +31,10 @@
   float: left;
   margin-left: 5px;
 }
-
+.form-top .el-form-item {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
 ::-webkit-scrollbar { /*滚动条整体样式*/
   width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
   height: 6px;
