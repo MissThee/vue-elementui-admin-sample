@@ -29,7 +29,7 @@
       setStateForSideNavigationRoutes(routes, sideBarPermissionValueList) {
         routes.forEach((route) => {
           //有[ADMIN]权限时，认定为管理员，显示所有菜单
-          if (sideBarPermissionValueList.indexOf('[ADMIN]') > 0 || route.meta && sideBarPermissionValueList.indexOf(route.meta.value) > 0) {
+          if (sideBarPermissionValueList.indexOf('[ADMIN]') > 0 || route.meta && sideBarPermissionValueList.indexOf(route.meta.value) >= 0) {
             route.state = true;
 
           }
