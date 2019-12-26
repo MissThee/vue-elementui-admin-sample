@@ -57,12 +57,12 @@
         this.isShow = true;
         this.isUpdate = isUpdate;
         this.unitTree = treeInfo;
+        this.form = JSON.parse(JSON.stringify(this.formEmpty));
         if (isUpdate) {
           this.form = rowInfo;
           this.form.parentIdForVModel = rowInfo.parentId;
           this.form.parentId = 0;
         } else {
-          this.form = JSON.parse(JSON.stringify(this.formEmpty));
           if (rowInfo !== undefined) {
             this.form.parentIdForVModel = rowInfo.id;
           }

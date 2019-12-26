@@ -10,9 +10,9 @@
       <el-table-column label="序号" align="center" width="70">
         <template slot-scope="scope"><span>{{scope.$index+(searchForm.pageNum - 1) * searchForm.pageSize + 1}} </span></template>
       </el-table-column>
-      <el-table-column prop="username" align="center" width="150" label="用户名" sortable></el-table-column>
-      <el-table-column prop="nickname" align="center" width="150" label="昵称" sortable></el-table-column>
-      <el-table-column prop="unitName" align="center" min-width="120" label="所属组织机构名称" sortable></el-table-column>
+      <el-table-column prop="username" align="center" width="150" label="用户名" sortable/>
+      <el-table-column prop="nickname" align="center" width="150" label="昵称" sortable/>
+      <el-table-column prop="unitName" align="center" min-width="120" label="所属组织机构名称" sortable/>
       <el-table-column prop="roleList" align="left" min-width="200" label="账号角色" sortable>
         <template slot-scope="scope">
             <span v-for="item in scope.row.roleList">
@@ -60,32 +60,22 @@
     <el-dialog :close-on-click-modal="false" :title="(isCreate?'增加':'修改')+'用户'" width="600px" :visible.sync="isShowAddOrUpdateDialog">
       <el-form ref="addOrUpdateForm" :model="form" label-position="right" label-width="80px">
         <el-form-item label="昵称:">
-          <el-input v-model="form.nickname"></el-input>
+          <el-input v-model="form.nickname"/>
         </el-form-item>
         <el-form-item label="用户名:">
-          <el-input v-model="form.username"></el-input>
+          <el-input v-model="form.username"/>
         </el-form-item>
         <el-form-item label="密码:" v-if="isShowPasswordEditor">
-          <el-input v-model="form.password"></el-input>
+          <el-input v-model="form.password"/>
         </el-form-item>
         <el-form-item label="组织机构:">
-          <el-cascader :options="unitTreeData" :value="form.unitId" @change="selectUnit" :props="treeProps" :show-all-levels="false" clearable></el-cascader>
+          <el-cascader :options="unitTreeData" :value="form.unitId" @change="selectUnit" :props="treeProps" :show-all-levels="false" clearable/>
         </el-form-item>
         <el-form-item label="账户状态:">
-          <el-switch
-            v-model="form.isEnable"
-            active-text="可用"
-            inactive-text="停用">
-            >
-          </el-switch>
+          <el-switch v-model="form.isEnable" active-text="可用" inactive-text="停用"/>
         </el-form-item>
         <el-form-item label="管理员:">
-          <el-switch
-            v-model="form.isAdmin"
-            active-text="是"
-            inactive-text="否">
-            >
-          </el-switch>
+          <el-switch v-model="form.isAdmin" active-text="是" inactive-text="否"/>
         </el-form-item>
         <el-form-item label="角色:">
           <el-checkbox-group
@@ -214,6 +204,7 @@
         this.isCreate = false;
         this.isShowAddOrUpdateDialog = true;
         this.isShowPasswordEditor = false;
+        this.form=JSON.parse(JSON.stringify(this.formEmpty));
         UserApi.getUserOne({
           id: row.id,
         })
@@ -222,7 +213,7 @@
           });
       },
       userDelete(index, row) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
