@@ -3,7 +3,7 @@
     <div style="float:left;font-weight: bold;font-size: 20px;color: #6b9aff;line-height: 50px;padding-right:20px;">管理系统</div>
     <breadcrumb/>
     <el-dropdown class="headPortrait" @command="handleCommand">
-      <div style="width:36px;height:35px;background-color:deepskyblue;cursor:pointer;border-radius: 4px">
+      <div style="width:35px;height:35px;cursor:pointer;border-radius: 5px;overflow: hidden;box-shadow: 0 0 5px gray">
         <img :src="Img.UserAvatar" height="36" alt="头像">
       </div>
       <el-dropdown-menu slot="dropdown">
