@@ -23,13 +23,16 @@
         </div>
         <div slot="file" style="position: relative;height: 100%;" slot-scope="{file}">
           <div style="height: 100%;" v-for="fileComponentInfo in [getFileComponentInfo(file)]">
-            <div style="background-repeat: no-repeat;background-position: center;height: 100%" :style="{backgroundImage: ('url(\''+fileComponentInfo.icon+'\')'),backgroundSize:(fileComponentInfo.isShowPreview?'cover':'70%')}"></div>
+            <div style="background-repeat: no-repeat;background-position: center;height: 100%"
+                 :style="{backgroundImage: ('url(\''+fileComponentInfo.icon+'\')'),backgroundSize:(fileComponentInfo.isShowPreview?'cover':'70%')}"></div>
             <div style="position: absolute;top:0;left:0;height: 100%;width: 100%;">
-              <div style="position: absolute;top:0;left:0;height: 100%;width: 100%;background-color: #666666;opacity: 0.65"></div>
+              <div
+                style="position: absolute;top:0;left:0;height: 100%;width: 100%;background-color: #666666;opacity: 0.65"></div>
               <div style="position: relative;color:#ffffff;font-weight: bold;margin-left: 5px">{{file.name}}</div>
             </div>
             <span class="el-upload-list__item-actions">
-                  <span class="el-upload-list__item-preview" v-if="fileComponentInfo.isShowPreviewButton" @click="handlePictureCardPreview(file.url)">
+                  <span class="el-upload-list__item-preview" v-if="fileComponentInfo.isShowPreviewButton"
+                        @click="handlePictureCardPreview(file.url)">
                     <i class="el-icon-zoom-in"></i>
                   </span>
                   <span class="el-upload-list__item-delete">
@@ -51,7 +54,7 @@
 
 <script>
   import Global from 'src/utils/global';
-  import { getToken } from 'src/utils/cookies';
+  import {getToken} from 'src/utils/cookies';
   import FileIcon from 'src/assets/img/file-icon/file-icon';
   import axios from 'axios';
 
@@ -95,7 +98,8 @@
       },
       handleRemove(file) {
         this.$refs.CustomCardFileUploader.abort(file); // upload: el-upload的ref值；file:File类型，file文件本身
-        this.fileListForShow.splice(this.fileListForShow.indexOf(file), 1);
+        if (this.fileListForShow.indexOf(file) !== -1)
+          this.fileListForShow.splice(this.fileListForShow.indexOf(file), 1);
         this.makeFileListForForm();
       },
       handlePictureCardPreview(url) {

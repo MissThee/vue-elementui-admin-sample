@@ -5,7 +5,8 @@
         <el-input v-model="letClueForm.id" style="width: 100%" disabled></el-input>
       </el-form-item>
       <el-form-item label="受理时间">
-        <el-date-picker v-model="letClueForm.receptionTime" type="date" style="width: 100%;" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="letClueForm.receptionTime" type="date" style="width: 100%;" value-format="yyyy-MM-dd"
+                        placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="线索来源">
         <el-select v-model="letClueForm.dicSourceIdList" multiple placeholder="请选择" style="width: 100%;">
@@ -13,13 +14,21 @@
         </el-select>
       </el-form-item>
       <el-form-item label="被反映人">
-        <div :class="{'trans-animation':enableAnimate}" style="position:relative" :style="{height:letClueForm.letDefendantList.length*180+'px'}">
-          <transition-group :name="enableAnimate?'defendant-card-animate':''" @after-leave="enableAnimate=false"  mode="in-out">
-            <el-form label-width="90px" class="card-style inner-card" :class="{'trans-animation':enableAnimate}" :style="{top:index*180+'px'}" :model="item" size="mini" v-for="(item, index) in letClueForm.letDefendantList" v-bind:key="item.nodeId===undefined?item.id:item.nodeId"
+        <div :class="{'trans-animation':enableAnimate}" style="position:relative"
+             :style="{height:letClueForm.letDefendantList.length*180+'px'}">
+          <transition-group :name="enableAnimate?'defendant-card-animate':''" @after-leave="enableAnimate=false"
+                            mode="in-out">
+            <el-form label-width="90px" class="card-style inner-card" :class="{'trans-animation':enableAnimate}"
+                     :style="{top:index*180+'px'}" :model="item" size="mini"
+                     v-for="(item, index) in letClueForm.letDefendantList"
+                     v-bind:key="item.nodeId===undefined?item.id:item.nodeId"
                      :disabled="!canEdit">
               <el-form-item label="姓名">
                 <el-input v-model="item.name" style="width: 70%"></el-input>
-                <el-button type="danger" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" style="float:right" @click="deleteDefendant(item, index)">删除此被反映人</el-button>
+                <el-button type="danger" size="small" plain class="custom-button-in-toolbar"
+                           icon="el-icon-circle-plus-outline" style="float:right" @click="deleteDefendant(item, index)">
+                  删除此被反映人
+                </el-button>
               </el-form-item>
               <el-form-item label="单位与职务">
                 <el-input v-model="item.companyName" style="width: 70%"></el-input>
@@ -31,13 +40,16 @@
               </el-form-item>
               <el-form-item label="干部类型">
                 <el-select v-model="item.jobTypeIdList" multiple placeholder="请选择" style="width: 70%">
-                  <el-option v-for="item in cadreOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in cadreOptions" :key="item.id" :label="item.name"
+                             :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
           </transition-group>
         </div>
-        <el-button type="success" size="small" plain v-if="canEdit" class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="addGroup">添加被反映人</el-button>
+        <el-button type="success" size="small" plain v-if="canEdit" class="custom-button-in-toolbar"
+                   icon="el-icon-circle-plus-outline" @click="addGroup">添加被反映人
+        </el-button>
       </el-form-item>
       <el-form-item label="主要问题">
         <el-input type="textarea" autosize :rows="2" v-model="letClueForm.content" style="width: 100%;"></el-input>
@@ -50,14 +62,17 @@
       </el-form-item>
       <el-form-item label="涉及领域">
         <el-select v-model="letClueForm.dicAreaInvolvedIdList" multiple placeholder="请选择" style="width: 100%;">
-          <el-option v-for="item in involvedFieldOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option v-for="item in involvedFieldOptions" :key="item.id" :label="item.name"
+                     :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="附件">
         <file-uploader ref="FileUploader"></file-uploader>
       </el-form-item>
       <el-form-item style="text-align: center">
-        <el-button v-if="canEdit" type="primary" size="large" style="margin-left: -80px" icon="el-icon-circle-check" @click="submitGroup">提交</el-button>
+        <el-button v-if="canEdit" type="primary" size="large" style="margin-left: -80px" icon="el-icon-circle-check"
+                   @click="submitGroup">提交
+        </el-button>
       </el-form-item>
     </el-form>
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" append-to-body title="图片预览">
@@ -69,15 +84,16 @@
 <script>
   import Global from 'src/utils/global';
   import DataDictionaryApi from 'src/api/data-dictionary-api';
-  import { getToken } from 'src/utils/cookies';
+  import {getToken} from 'src/utils/cookies';
   import LetterClueApi from 'src/api/letter-clue-api';
-  import { showResMsg } from 'src/utils/operation-result-message';
+  import {showResMsg} from 'src/utils/operation-result-message';
   import FileIcon from 'src/assets/img/file-icon/file-icon';
   import axios from 'axios';
   import FileUploader from 'src/views/common/FileUploader';
+
   export default {
     name: 'letterClue',
-    components: { FileUploader },
+    components: {FileUploader},
     data() {
       return {
         titleName: '增加',
@@ -128,7 +144,7 @@
         if (formData !== undefined) {
           this.fileListForShow = JSON.parse(JSON.stringify(formData.letClueForm.fileList));
           this.letClueForm = formData.letClueForm;
-          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList,formData.canEdit);
+          this.$refs.FileUploader.initFileList(formData.letClueForm.fileList, formData.canEdit);
           this.titleName = formData.canEdit ? '修改' : '查看';
           this.canEdit = formData.canEdit;
           this.isCreate = formData.isCreate;
@@ -136,34 +152,35 @@
       },
       initSelectorData() {
         // 线索来源
-        DataDictionaryApi.getDictionary({ listUrl: '/dic/source/all', isDelete: false })
-          .then(({ data }) => {
+        DataDictionaryApi.getDictionary({listUrl: '/dic/source/all', isDelete: false})
+          .then(({data}) => {
             this.threadOptions = data.data.dicCommonList;
           });
         // 职级
-        DataDictionaryApi.getDictionary({ listUrl: '/dic/jobrank/all', isDelete: false })
-          .then(({ data }) => {
+        DataDictionaryApi.getDictionary({listUrl: '/dic/jobrank/all', isDelete: false})
+          .then(({data}) => {
             this.rankOptions = data.data.dicCommonList;
           });
         // 干部类型
-        DataDictionaryApi.getDictionary({ listUrl: '/dic/jobtype/all', isDelete: false })
-          .then(({ data }) => {
+        DataDictionaryApi.getDictionary({listUrl: '/dic/jobtype/all', isDelete: false})
+          .then(({data}) => {
             this.cadreOptions = data.data.dicCommonList;
           });
         // 涉及领域
-        DataDictionaryApi.getDictionary({ listUrl: '/dic/areainvolved/all', isDelete: false })
-          .then(({ data }) => {
+        DataDictionaryApi.getDictionary({listUrl: '/dic/areainvolved/all', isDelete: false})
+          .then(({data}) => {
             this.involvedFieldOptions = data.data.dicCommonList;
           });
         // 违法行为
-        DataDictionaryApi.getDictionary({ listUrl: '/dic/illegalbehavior/all', isDelete: false })
-          .then(({ data }) => {
+        DataDictionaryApi.getDictionary({listUrl: '/dic/illegalbehavior/all', isDelete: false})
+          .then(({data}) => {
             this.unlawfulActOptions = data.data.dicCommonList;
           });
       },
       deleteDefendant(item, index) {
         this.enableAnimate = true;
-        this.letClueForm.letDefendantList.splice(index, 1);
+        if (index >= 0)
+          this.letClueForm.letDefendantList.splice(index, 1);
       },
       addGroup() {
         this.enableAnimate = true;
@@ -179,7 +196,7 @@
         this.letClueForm.fileList = this.$refs.FileUploader.getFileList();
         if (this.isCreate) {
           LetterClueApi.addLetClue(this.letClueForm)
-            .then(({ data }) => {
+            .then(({data}) => {
               showResMsg(data);
               this.$emit('finishAddOrUpdate', data.result);
               if (data.result) {
@@ -188,7 +205,7 @@
             });
         } else {
           LetterClueApi.updateLetClue(this.letClueForm)
-            .then(({ data }) => {
+            .then(({data}) => {
               showResMsg(data);
               this.$emit('finishAddOrUpdate', data.result);
             });
