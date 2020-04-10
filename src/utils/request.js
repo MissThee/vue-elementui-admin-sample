@@ -51,8 +51,7 @@ request.interceptors.request.use((request) => {
 // response拦截器，接收返回值后可在此先对返回值进行操作
 request.interceptors.response.use((response) => {
     if (response.data.code === 401) {
-      router.replace('/')
-        .then();
+      router.replace('/').then();
       return;
     }
     if (response.headers.authorization !== undefined) {

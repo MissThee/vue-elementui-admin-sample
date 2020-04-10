@@ -13,8 +13,14 @@ export function getToken() {
   return token;
 }
 
-export function setToken(value) {
-  return Cookies.set(tokenKey, value);
+export function setToken(value, isLongLogin) {
+  let cookieOptions = {};
+  if (isLongLogin) {
+    //登录的时候选择7天自动登录后，保存token到cookie中且设置过期日期。
+    //其他的情况如：修改密码、token过期后续期，拿到的token保存到cookie不再设置过期日期，用户本次关闭浏览器后清除
+    cookieOptions = { expires: 365 };
+  }
+  return Cookies.set(tokenKey, value, cookieOptions);
 }
 
 export function removeToken() {

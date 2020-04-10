@@ -1,20 +1,20 @@
 <template>
-    <div style="position: absolute;height: 100%;width: 100%;z-index:2000 " class="background">
-      <div class="boxCenter">
-        <p class="fontZT">系统登录</p>
-        <el-form :model="form" label-width="80px" style="margin-top: 30px;" class="input">
-          <el-input v-model="form.username" placeholder="用户名"
-                    prefix-icon="Img.User"></el-input>
-          <el-input type="password" v-model="form.password" auto-complete="off"
-                    @keyup.enter.native="submitForm" placeholder="密码"
-                    :prefix-icon="Img.Cipher"
-                    style="margin-top: 20px;"></el-input>
-          <el-button type="primary" @click="submitForm"
-                     style="width: 100%;margin-top: 20px;">登 录
-          </el-button>
-        </el-form>
+  <div style="position: absolute;height: 100%;width: 100%;z-index:2000 " class="background">
+    <div class="boxCenter">
+      <p class="fontZT">系统登录</p>
+      <div :model="form" label-width="80px" style="margin-top: 30px;" class="input">
+        <el-input v-model="form.username" placeholder="用户名"
+                  prefix-icon="Img.User"/>
+        <el-input type="password" v-model="form.password" auto-complete="off"
+                  @keyup.enter.native="submitForm" placeholder="密码"
+                  :prefix-icon="Img.Cipher"
+                  style="margin-top: 20px;"/>
+        <el-checkbox v-model="form.isLongLogin" label="7天自动登录" style="color: white;float:right"/>
+        <el-button type="primary" @click="submitForm" style="width: 100%;margin-top: 20px;">登 录
+        </el-button>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -30,6 +30,7 @@
         form: {
           username: '',
           password: '',
+          isLongLogin: false,
         },
       };
     },
@@ -49,7 +50,7 @@
           LoginApi.setLogin(this.form)
             .then(({ data: { data, result, msg }, headers }) => {
               if (result) {
-                setToken(headers.authorization);
+                setToken(headers.authorization,this.form.isLongLogin);
                 setLoginInfo(JSON.stringify(data));
                 this.$message.success('登录成功');
                 this.$router.replace('/home');
@@ -113,7 +114,7 @@
   /*切换效果fade-xxx*/
   .suck-in-enter {
     opacity: 0;
-    transform:scale(0,0);
+    transform: scale(0, 0);
   }
 
   .suck-in-enter-active {
@@ -126,6 +127,6 @@
 
   .suck-in-leave-active {
     opacity: 0;
-    transform: scale(0,0);
+    transform: scale(0, 0);
   }
 </style>
