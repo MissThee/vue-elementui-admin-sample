@@ -171,6 +171,7 @@
               let node = permissionTreeEL.getNode(nodeId);
               if (node !== undefined && node !== null) {
                 if (!node.isLeaf) {
+                  if(permissionIdList.indexOf(nodeId)!==-1)
                   permissionIdList.splice(permissionIdList.indexOf(nodeId), 1);
                 }
               }
