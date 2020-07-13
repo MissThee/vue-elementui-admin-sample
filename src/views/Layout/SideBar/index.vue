@@ -10,11 +10,11 @@
   import routes from 'src/router/routes';
 
   export default {
+    name:'SideBar',
     components: { SideBarItem },
     data() {
       return {
         sideNavigationRoutes: JSON.parse(JSON.stringify(routes)),
-        activeIndex: ''
       };
     },
 
@@ -31,18 +31,11 @@
           //有[ADMIN]权限时，认定为管理员，显示所有菜单
           if (sideBarPermissionValueList.indexOf('[ADMIN]') >= 0 || route.meta && sideBarPermissionValueList.indexOf(route.meta.value) >= 0) {
             route.state = true;
-
           }
           if (route.children) {
             this.setStateForSideNavigationRoutes(route.children,sideBarPermissionValueList);
           }
         });
-      }
-    },
-    watch: {
-      $router() {
-        let matched = this.$route.matched.filter(item => item.meta.title);
-        this.activeIndex = matched.pop();
       }
     },
   };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true"  style="box-sizing: border-box" class="reduce-height-element">
+    <el-form :inline="true"  style="box-sizing: border-box;" class="reduce-height-element">
       <el-form-item label="分类：" style="margin-left: 10px;">
         <el-select size="small" v-model="inquires.resultTypeId" placeholder="请选择" clearable style="width: 100px;">
           <el-option v-for="item in resultTypeOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -15,7 +15,9 @@
       <el-form-item label="被反映人：" style="margin-left: 10px;">
         <el-input size="small" v-model="inquires.defendantName" style="width: 150px;"></el-input>
       </el-form-item>
-      <el-button type="primary" size="small" plain class="custom-button-in-toolbar" style="margin-top: 10px;" @click="inquire">查询</el-button>
+      <el-form-item  style="margin-left: 10px;">
+        <el-button type="primary" size="small" plain class="custom-button-in-toolbar"  @click="inquire">查询</el-button>
+      </el-form-item>
     </el-form>
     <el-table :height="tableAutoHeight" :data="tableData" border stripe header-cell-class-name="custom-header-cell" style="width: 100%">
       <el-table-column label="序号" align="center" width="70">
@@ -317,5 +319,7 @@
 </script>
 
 <style scoped>
-
+  /deep/ .el-form-item {
+    margin-bottom: 0;
+  }
 </style>

@@ -1,24 +1,25 @@
+/*自定义elementui 表格表头样式，缩小表头格子大小*/
 .custom-header-cell {
   background-color: #eff4f9 !important;
   border-bottom: 1px solid #eaecf1 !important;
   border-top: 1px solid #eaecf1 !important;
   padding:0 !important;
 }
-
+/*自定义elementui messagebox弹出消息组件的z-index值*/
 .custom-message-box-z-index {
   z-index: 3000 !important;
 }
-
+/*自定义elementui 按钮组件样式（在表格中使用的）*/
 .custom-button-in-table {
   padding: 4px;
   font-size: 12px;
   margin: 0;
 }
-
+/*自定义elementui 按钮组件样式（在表格上方的栏目使用的）*/
 .custom-button-in-toolbar {
   padding: 8px;
 }
-
+/*这个class用于标记一些组件，在js中计算窗口高度时，用此class获取这些组件，进行剩余高度计算，以使表格总是充满当前窗口*/
 .reduce-height-element{
   box-sizing: border-box;
 }

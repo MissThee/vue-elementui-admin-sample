@@ -16,13 +16,13 @@
     <el-dialog :close-on-click-modal="false" title="修改密码" width="400px" :visible.sync="dialogFormVisible">
       <el-form :model="form" label-position="left" label-width="100px">
         <el-form-item required label="旧密码">
-          <el-input type="password" v-model="form.oldPassword"></el-input>
+          <el-input type="password" v-model="form.oldPassword"/>
         </el-form-item>
         <el-form-item required label="新密码">
-          <el-input type="password" v-model="form.newPassword"></el-input>
+          <el-input type="password" v-model="form.newPassword"/>
         </el-form-item>
         <el-form-item required label="重复新密码">
-          <el-input type="password" v-model="newPasswordCheck"></el-input>
+          <el-input type="password" v-model="newPasswordCheck"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -41,7 +41,7 @@
   import HomeApi from 'src/api/home-api';
 
   export default {
-    name: 'index',
+    name: 'NavBar',
     components: { Breadcrumb },
     data() {
       return {
@@ -73,11 +73,11 @@
             .then(() => {
               removeToken();
               removeLoginInfo();
-              this.$router.replace('/');
               this.$message({
                 type: 'success',
-                message: '退出成功!',
+                message: '已退出',
               });
+              this.$router.replace('/');
             });
         }
       },

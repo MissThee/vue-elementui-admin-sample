@@ -2,16 +2,11 @@
   <div style="position: absolute;height: 100%;width: 100%;z-index:2000 " class="background">
     <div class="boxCenter">
       <p class="fontZT">系统登录</p>
-      <div :model="form" label-width="80px" style="margin-top: 30px;" class="input">
-        <el-input v-model="form.username" placeholder="用户名"
-                  prefix-icon="Img.User"/>
-        <el-input type="password" v-model="form.password" auto-complete="off"
-                  @keyup.enter.native="submitForm" placeholder="密码"
-                  :prefix-icon="Img.Cipher"
-                  style="margin-top: 20px;"/>
-        <el-checkbox v-model="form.isLongLogin" label="7天自动登录" style="color: white;float:right"/>
-        <el-button type="primary" @click="submitForm" style="width: 100%;margin-top: 20px;">登 录
-        </el-button>
+      <div :model="form" style="margin-top: 30px;" class="input">
+        <el-input v-model="form.username" placeholder="用户名"/>
+        <el-input type="password" v-model="form.password" auto-complete="off" @keyup.enter.native="submitForm" placeholder="密码" :prefix-icon="Img.Cipher" style="margin-top: 20px;"/>
+        <el-checkbox v-model="form.isLongLogin" label="记住登录状态" style="color: white;float:right"/>
+        <el-button type="primary" @click="submitForm" style="width: 100%;margin-top: 20px;">登 录</el-button>
       </div>
     </div>
   </div>
@@ -20,7 +15,7 @@
 <script>
   import Img from 'src/assets/img';
   import LoginApi from 'src/api/login-api';
-  import { setLoginInfo, setToken } from 'src/utils/cookies';
+  import * as Cookies from 'src/utils/cookies';
 
   export default {
     name: 'Login',
@@ -47,11 +42,10 @@
             type: 'warning',
           });
         } else {
-          LoginApi.setLogin(this.form)
+          LoginApi.login(this.form)
             .then(({ data: { data, result, msg }, headers }) => {
               if (result) {
-                setToken(headers.authorization,this.form.isLongLogin);
-                setLoginInfo(JSON.stringify(data));
+                Cookies.setToken(headers.authorization, this.form.isLongLogin);
                 this.$message.success('登录成功');
                 this.$router.replace('/home');
               } else {

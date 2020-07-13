@@ -1,17 +1,19 @@
 import Global from 'src/utils/global';
-import { getToken, setToken } from 'src/utils/cookies';
+import { getTokenOrRedirect, setToken } from 'src/utils/cookies';
 import axios from 'axios';
-import store from 'src/store';
 import { Notification } from 'element-ui';
 import router from 'src/router';
-// 创建实例
+//全局使用此axios实例进行http请求，统一设置
 const request = axios.create({
-  baseURL: `${Global.URL}`,
+  baseURL: Global.URL,
   timeout: 50000,
 });
+
+
+//请求出现错误时提示的最小时间间隔（秒）。此时间段内的，此axios实例请求的错误提示仅显示第一个
+const errorNotiMinTime = 2;
 let requestErrorNotiTime = 0;
 let responseErrorNotiTime = 0;
-const errorNotiMinTime = 2;//错误提示出现的最小间隔
 let interval;
 //开启一个循环定时器
 (function increaseNotiTime() {
@@ -33,7 +35,9 @@ let interval;
 
 // request拦截器，请求发送前修改发送内容
 request.interceptors.request.use((request) => {
-    request.headers.authorization = getToken();
+    if (request.url !== '/login') {
+      request.headers.authorization = getTokenOrRedirect();
+    }
     return request;
   }, error => {
     if (requestErrorNotiTime === 0) {
@@ -51,7 +55,8 @@ request.interceptors.request.use((request) => {
 // response拦截器，接收返回值后可在此先对返回值进行操作
 request.interceptors.response.use((response) => {
     if (response.data.code === 401) {
-      router.replace('/').then();
+      router.replace('/')
+        .then();
       return;
     }
     if (response.headers.authorization !== undefined) {

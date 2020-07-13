@@ -1,17 +1,17 @@
 <template>
   <el-breadcrumb separator="/" class="app-breadcrumb">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item,index)  in levelList" :key="item.path" v-if='item.meta.title'>
+      <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path" v-if='item.meta.title'>
         <router-link v-if="item.meta.title==='首页'" :to="item.redirect||item.path">{{(item.meta.title)}}</router-link>
         <span v-else-if='item.path' class="no-redirect">{{item.meta.title}}</span>
-        <span v-else-if='index===levelList.length-1' class="no-redirect">{{item.meta.title}}</span>
-        <router-link v-else :to="item.redirect||item.path">{{(item.meta.title)}}</router-link>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
 </template>
 
 <script>
+  import HOME_ROUTE_DEFINITION from '../HomeRouteDefinition';
+
   export default {
     name: 'Breadcrumb',
     created() {
@@ -29,10 +29,12 @@
     },
     methods: {
       getBreadcrumb() {
-        let matched = this.$route.matched.filter(item => item.meta.title);
-        const first = matched[0];
+        let matched = this.$route.matched;
+        const first = this.$route;
         if (first && first.meta.title !== '首页') {
-          matched = [{ path: '/home', meta: { title: '首页' } }].concat(matched);
+          matched = [HOME_ROUTE_DEFINITION].concat(matched);
+        } else {
+          matched = [HOME_ROUTE_DEFINITION];
         }
         this.levelList = matched;
       }

@@ -1,19 +1,22 @@
 <template>
   <scroll-pane class='tags-view-container' ref='scrollPane'>
     <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in visitedViews" :to="tag.path" :key="tag.path">
-      {{ tag.title }}
-      <span class='el-icon-close' @click='closeViewTags(tag,$event)'></span>
+      {{ tag.meta.title }}<span v-if="tag.meta.title!=='首页'" class='el-icon-close' @click='closeViewTags(tag,$event)'/>
     </router-link>
   </scroll-pane>
 </template>
 
 <script>
   import ScrollPane from './ScrollPanel';
+  import HOME_ROUTE_DEFINITION from '../HomeRouteDefinition';
 
   export default {
+    name: 'TagsBar',
     data() {
       return {
-        visitedViews: [],
+        visitedViews: [
+          HOME_ROUTE_DEFINITION
+        ],
       };
     },
     components: { ScrollPane },
@@ -22,20 +25,23 @@
     },
     methods: {
       closeViewTags(view, $event) {
+        //遍历数组删除tag
+        let tagIndex = 0;
         for (const [i, v] of this.visitedViews.entries()) {
           if (v.path === view.path) {
             this.visitedViews.splice(i, 1);
+            tagIndex = i;
             break;
           }
         }
+        //如果删除的tag是激活的状态，需跳转页面
         if (this.isActive(view)) {
-          const latestView = this.visitedViews.slice(-1)[0];
-          // console.log('latestView', latestView);
+          //总是跳到当前激活tag的前一个，如果没有前一个，就跳到下一个
+          const latestView = this.visitedViews.slice(Math.max(tagIndex - 1, 0))[0];
           if (latestView) {
             this.$router.push(latestView.path);
           } else {
-            this.$router.push('/main/dashboard');
-            this.addViewTags();
+            this.$router.push('/home');
           }
         }
         $event.preventDefault();
@@ -44,19 +50,20 @@
         if (this.$route.name) {
           return this.$route;
         }
-        return false;
+        return null;
       },
       addViewTags() {
         const route = this.generateRoute();
-        if (!route) {
+        if (route == null) {
+          console.log('此路由信息没有name值，请修改');
           return false;
         }
         if (this.visitedViews.some(v => v.path === route.path)) return;
         this.visitedViews.push({
-          name: route.name,
           path: route.path,
-          title: route.meta.title || 'no-name'
+          meta: { title: route.meta.title }
         });
+        console.log('this.visitedViews',this.visitedViews)
       },
       isActive(route) {
         return route.path === this.$route.path || route.name === this.$route.name;

@@ -54,7 +54,7 @@
 
 <script>
   import Global from 'src/utils/global';
-  import {getToken} from 'src/utils/cookies';
+  import {getTokenOrRedirect} from 'src/utils/cookies';
   import FileIcon from 'src/assets/img/file-icon/file-icon';
   import axios from 'axios';
 
@@ -68,7 +68,7 @@
         dialogImageUrl: '',
         Global,
         headers: {
-          Authorization: getToken(),
+          Authorization: getTokenOrRedirect(),
         },
         canEdit: true,
       };

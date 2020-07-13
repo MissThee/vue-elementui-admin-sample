@@ -49,7 +49,7 @@
     methods: {
       // -- 列表 --
       fetchData() {
-        PermissionApi.getPermissionTree({ isDelete: false, orderBy: { name: true, index_num: true }, rootId: 0 })
+        PermissionApi.getPermissionTree({ isDelete: false, orderBy: { index_num: true, name: true }, rootId: 0 })
           .then(({ data }) => {
             this.treeData = data.data.permissionTree;
           });

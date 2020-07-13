@@ -2,15 +2,15 @@
   <div style="width:800px;margin:0 auto; " class="card-style">
     <el-form :model="letClueForm" label-width="80px" size="mini" :disabled="!canEdit">
       <el-form-item label="线索编码" v-if="!isCreate">
-        <el-input v-model="letClueForm.id" style="width: 100%" disabled></el-input>
+        <el-input v-model="letClueForm.id" style="width: 100%" disabled/>
       </el-form-item>
       <el-form-item label="受理时间">
         <el-date-picker v-model="letClueForm.receptionTime" type="date" style="width: 100%;" value-format="yyyy-MM-dd"
-                        placeholder="选择日期"></el-date-picker>
+                        placeholder="选择日期"/>
       </el-form-item>
       <el-form-item label="线索来源">
         <el-select v-model="letClueForm.dicSourceIdList" multiple placeholder="请选择" style="width: 100%;">
-          <el-option v-for="item in threadOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option v-for="item in threadOptions" :key="item.id" :label="item.name" :value="item.id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="被反映人">
@@ -24,24 +24,24 @@
                      v-bind:key="item.nodeId===undefined?item.id:item.nodeId"
                      :disabled="!canEdit">
               <el-form-item label="姓名">
-                <el-input v-model="item.name" style="width: 70%"></el-input>
+                <el-input v-model="item.name" style="width: 70%"/>
                 <el-button type="danger" size="small" plain class="custom-button-in-toolbar"
                            icon="el-icon-circle-plus-outline" style="float:right" @click="deleteDefendant(item, index)">
                   删除此被反映人
                 </el-button>
               </el-form-item>
               <el-form-item label="单位与职务">
-                <el-input v-model="item.companyName" style="width: 70%"></el-input>
+                <el-input v-model="item.companyName" style="width: 70%"/>
               </el-form-item>
               <el-form-item label="职级">
                 <el-select v-model="item.jobRankId" placeholder="请选择" style="width: 70%">
-                  <el-option v-for="item in rankOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in rankOptions" :key="item.id" :label="item.name" :value="item.id"/>
                 </el-select>
               </el-form-item>
               <el-form-item label="干部类型">
                 <el-select v-model="item.jobTypeIdList" multiple placeholder="请选择" style="width: 70%">
                   <el-option v-for="item in cadreOptions" :key="item.id" :label="item.name"
-                             :value="item.id"></el-option>
+                             :value="item.id"/>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -52,7 +52,7 @@
         </el-button>
       </el-form-item>
       <el-form-item label="主要问题">
-        <el-input type="textarea" autosize :rows="2" v-model="letClueForm.content" style="width: 100%;"></el-input>
+        <el-input type="textarea" autosize :rows="2" v-model="letClueForm.content" style="width: 100%;"/>
       </el-form-item>
       <el-form-item label="违法行为">
         <el-select v-model="letClueForm.dicIllegalBehaviorIdList" multiple placeholder="请选择" style="width: 100%;">
@@ -63,11 +63,11 @@
       <el-form-item label="涉及领域">
         <el-select v-model="letClueForm.dicAreaInvolvedIdList" multiple placeholder="请选择" style="width: 100%;">
           <el-option v-for="item in involvedFieldOptions" :key="item.id" :label="item.name"
-                     :value="item.id"></el-option>
+                     :value="item.id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="附件">
-        <file-uploader ref="FileUploader"></file-uploader>
+        <file-uploader ref="FileUploader"/>
       </el-form-item>
       <el-form-item style="text-align: center">
         <el-button v-if="canEdit" type="primary" size="large" style="margin-left: -80px" icon="el-icon-circle-check"
@@ -84,7 +84,7 @@
 <script>
   import Global from 'src/utils/global';
   import DataDictionaryApi from 'src/api/data-dictionary-api';
-  import {getToken} from 'src/utils/cookies';
+  import {getTokenOrRedirect} from 'src/utils/cookies';
   import LetterClueApi from 'src/api/letter-clue-api';
   import {showResMsg} from 'src/utils/operation-result-message';
   import FileIcon from 'src/assets/img/file-icon/file-icon';

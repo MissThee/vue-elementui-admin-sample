@@ -1,26 +1,26 @@
 <template>
   <div style="position: absolute;height: 100%;width: 100%;">
     <el-container>
-      <NavBar style="position:absolute;top:0;left:0;width:100%;height: 50px;border-bottom:1px solid #BFBFBF;overflow: hidden;box-sizing: border-box" ref="NavBar"></NavBar>
-      <SideBar style="position:absolute;top:50px;left:0;bottom: 0;overflow-x: hidden;width:180px;background-color: rgb(84, 92, 100)" ref="SideBar"></SideBar>
-      <TagsBar style="position:absolute;top:50px;left:180px;right:0;height: 30px" ref="TagsBar"></TagsBar>
+      <NavBar style="position:absolute;top:0;left:0;width:100%;height: 50px;border-bottom:1px solid #BFBFBF;overflow: hidden;box-sizing: border-box" ref="NavBar"/>
+      <SideBar style="position:absolute;top:50px;left:0;bottom: 0;overflow-x: hidden;width:180px;background-color: rgb(84, 92, 100)" ref="SideBar"/>
+      <TagsBar style="position:absolute;top:50px;left:180px;right:0;height: 30px" ref="TagsBar"/>
       <div style="position:absolute;top:80px;left:180px;right:0;bottom: 0;overflow-x: hidden">
         <transition name="fade" mode="out-in">
-          <router-view></router-view>
+          <router-view/>
         </transition>
       </div>
     </el-container>
-
   </div>
 </template>
 
 <script>
-  import { mapActions} from 'vuex';
+  import { mapActions } from 'vuex';
   import SideBar from 'src/views/Layout/SideBar';
   import NavBar from 'src/views/Layout/NavBar';
   import TagsBar from 'src/views/Layout/TagsBar';
-  import { getLoginInfo,getToken, setLoginInfo,removeLoginInfo, removeToken } from 'src/utils/cookies';
+  import * as Cookies from 'src/utils/cookies';
   import AuthApi from 'src/api/auth-api';
+
   export default {
     name: 'Home',
     components: {
@@ -38,7 +38,7 @@
       this.initUserInfo();
     },
     methods: {
-      ...mapActions('layout',{
+      ...mapActions('layout', {
         setContentHeight: 'setContentHeight',
         setContentWidth: 'setContentWidth',
       }),
@@ -68,12 +68,11 @@
         };
       },
       initUserInfo() {
-        getToken();
         AuthApi.getAuthInfo()
           .then(({ data }) => {
             let user = data.data.user;
-            setLoginInfo(user);
-            getLoginInfo();
+            Cookies.setLoginInfo(user);
+            Cookies.getLoginInfoOrRedirect();
             this.$refs.NavBar.initNickname(user.nickname);
             this.$refs.SideBar.initSideBar(user.permissionValueList);
           });

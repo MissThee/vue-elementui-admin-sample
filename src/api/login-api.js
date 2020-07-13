@@ -2,7 +2,7 @@
 import request from 'src/utils/request';
 
 export default {
-  setLogin: requestData => request({
+  login: requestData => request({
     method: 'post',
     url: '/login',
     data: requestData,

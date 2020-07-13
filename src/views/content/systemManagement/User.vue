@@ -25,7 +25,7 @@
           <el-tag style="margin-left: 2px" :type="scope.row.isEnable ?'primary':'danger'" size="mini"> {{ scope.row.isEnable === true ? '可用' : '停用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="isAdmin" align="center" width="80" label="管理员" sortable>
+      <el-table-column prop="isAdmin" align="center" width="90" label="管理员" sortable>
         <template slot-scope="scope">
           <el-tag style="margin-left: 2px" :type="scope.row.isAdmin ?'primary':'info'" size="mini"> {{ scope.row.isAdmin === true ? '管理员' : '用户' }}</el-tag>
         </template>
@@ -224,6 +224,7 @@
             })
               .then(({ data }) => {
                 showResMsg(data);
+                this.fetchData();
               });
           });
       },
@@ -239,6 +240,7 @@
             })
               .then(({ data }) => {
                 showResMsg(data);
+                this.fetchData();
               });
           });
       },

@@ -2,14 +2,14 @@
 
 //meta中为自定义变量
 //hidden： 是否显示在侧边栏
-//title：  侧边栏名称
+//title：  侧边栏、tag标签 名称
 //value：  绑定的权限值（此值与用户的权限值permissionList关联，决定显示哪些路由）
 export default [
   {
     path: '/',
-    name: '/',
-    meta: { hidden: true, title: '登录', value: 'login' },
-    component: () => import('src/views/Login'),
+    name: 'startPage',
+    meta: { hidden: true, title: '加载中', value: 'startPage' },
+    component: () => import('src/views/StartPage'),
   },
   {
     path: '/login',
@@ -19,10 +19,11 @@ export default [
   }, {
     path: '/home',
     component: () => import('src/views/Layout'),
+    redirect:'/home/homePage',
     meta: { hidden: true, title: '首页', value: 'home' },
     children: [{
-      path: '',
-      name: 'passHomepage',
+      path: 'homePage',
+      name: 'homePage',
       component: () => import('src/views/content/homepage/HomePage'),
       meta: { title: '首页' },
     }],
@@ -70,7 +71,7 @@ export default [
         path: 'organizationStructure',
         name: 'manage-organizationStructure',
         component: () => import('src/views/content/systemManagement/Unit/Index'),
-        meta: { title: '组织机构管理', value: 'unit', }
+        meta: { title: '单位管理', value: 'unit', }
       }, {
         path: 'dataDictionary',
         name: 'manage-dataDictionary',
