@@ -59,6 +59,7 @@ export function removeLoginInfo() {
 }
 
 function noAuth() {
+  Cookies.remove(tokenKey);
   router.replace('/')
     .then(() => {
       Notification({
