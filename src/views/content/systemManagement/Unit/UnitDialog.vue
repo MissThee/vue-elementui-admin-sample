@@ -3,16 +3,16 @@
     <el-dialog :close-on-click-modal="false" :title="(isUpdate?'修改':'新增')+'单位'" :visible.sync="isShow" width="400px">
       <el-form :model="form" label-width="80px">
         <el-form-item label="上级">
-          <el-cascader style="width: 100%" :options="unitTree" :props="prop" clearable v-model="form.parentIdForVModel"></el-cascader>
+          <tree-select v-model="form.parentId" :treeData="unitTree" :props="prop" nodeKey="id"/>
         </el-form-item>
         <el-form-item label="名称">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name"/>
         </el-form-item>
         <el-form-item label="类型">
-          <el-input v-model="form.type"></el-input>
+          <el-input v-model="form.type"/>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="form.indexNum"></el-input>
+          <el-input v-model="form.indexNum"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -26,11 +26,12 @@
   import UnitApi from 'src/api/unit-api';
   import { showResMsg } from 'src/utils/operation-result-message';
 
+  import TreeSelect from '../../../common/TreeSelect';
+
   export default {
     name: 'Change',
-    props: {
-      value: Boolean,
-      changeInfo: Object,
+    components: {
+      TreeSelect
     },
     data() {
       return {
@@ -41,7 +42,6 @@
         formEmpty: {
           name: '',
           type: '',
-          parentIdForVModel: [],
           parentId: '',
           indexNum: 1000
         },
@@ -60,24 +60,13 @@
         this.form = JSON.parse(JSON.stringify(this.formEmpty));
         if (isUpdate) {
           this.form = rowInfo;
-          this.form.parentIdForVModel = rowInfo.parentId;
-          this.form.parentId = 0;
         } else {
           if (rowInfo !== undefined) {
-            this.form.parentIdForVModel = rowInfo.id;
+            this.form.parentId = rowInfo.id;
           }
         }
       },
       isOk() {
-        if (Array.isArray(this.form.parentIdForVModel)) {
-          if (this.form.parentIdForVModel.length === 0) {
-            this.form.parentId = 0;
-          } else {
-            this.form.parentId = this.form.parentIdForVModel[this.form.parentIdForVModel.length - 1];
-          }
-        } else {
-          this.form.parentId = this.form.parentIdForVModel;
-        }
         if (this.isUpdate) {
           UnitApi.updateUnit(this.form)
             .then(({ data }) => {

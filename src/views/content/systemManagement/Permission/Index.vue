@@ -20,7 +20,7 @@
       </el-tree>
     </div>
     <!-- 弹窗 -->
-    <PermissionDialog ref="editDialog" @up-data="fetchData"></PermissionDialog>
+    <PermissionDialog ref="editDialog" @up-data="fetchData"/>
   </div>
 </template>
 

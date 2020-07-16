@@ -1,5 +1,5 @@
 import Global from 'src/utils/global';
-import { getTokenOrRedirect, setToken } from 'src/utils/cookies';
+import { getTokenOrRedirect, removeToken, setToken } from 'src/utils/cookies';
 import axios from 'axios';
 import { Notification } from 'element-ui';
 import router from 'src/router';
@@ -66,6 +66,7 @@ request.interceptors.response.use((response) => {
     return response;
   }, error => {
     if (error.response.status === 401) {
+      removeToken();
       router.replace('/')
         .then(() => {
           Notification({

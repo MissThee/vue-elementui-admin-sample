@@ -5,7 +5,6 @@
         <el-button type="primary" size="small" plain class="custom-button-in-toolbar" icon="el-icon-circle-plus-outline" @click="prepareAdd">增加</el-button>
       </el-form-item>
     </el-form>
-
     <el-table :data="tableData" border header-cell-class-name="custom-header-cell" :height="tableAutoHeight" stripe style="width: 100%">
       <el-table-column label="序号" align="center" width="70">
         <template slot-scope="scope"><span>{{scope.$index+(searchForm.pageNum - 1) * searchForm.pageSize + 1}} </span></template>
@@ -69,7 +68,7 @@
           <el-input v-model="form.password"/>
         </el-form-item>
         <el-form-item label="组织机构:">
-          <el-cascader :options="unitTreeData" :value="form.unitId" @change="selectUnit" :props="treeProps" :show-all-levels="false" clearable/>
+          <tree-select v-model="form.unitId" :treeData="unitTreeData" :props="{ children: 'children', label: 'name' }" nodeKey="id"/>
         </el-form-item>
         <el-form-item label="账户状态:">
           <el-switch v-model="form.isEnable" active-text="可用" inactive-text="停用"/>
@@ -99,11 +98,12 @@
   import RoleApi from 'src/api/role-api.js';
   import UnitApi from 'src/api/unit-api';
   import { showResMsg } from 'src/utils/operation-result-message';
-  import { cascaderValue } from 'src/utils/cascader-utils';
   import SimpleAutoHeightTable from 'src/mixin/SimpleAutoHeightTable';
+  import TreeSelect from '../../common/TreeSelect';
 
   export default {
     mixins: [SimpleAutoHeightTable],
+    components: {TreeSelect},
     name: 'User',
     data() {
       return {
@@ -138,7 +138,6 @@
         roleData: [],
       };
     },
-
     created() {
       this.form = JSON.parse(JSON.stringify(this.formEmpty));
       UnitApi.getUnitTree({
@@ -163,9 +162,6 @@
         });
     },
     methods: {
-      selectUnit(item) {
-        this.form.unitId = cascaderValue(item);
-      },
       fetchData() {
         UserApi.getUserList(this.searchForm)
           .then(({ data }) => {
@@ -204,7 +200,7 @@
         this.isCreate = false;
         this.isShowAddOrUpdateDialog = true;
         this.isShowPasswordEditor = false;
-        this.form=JSON.parse(JSON.stringify(this.formEmpty));
+        this.form = JSON.parse(JSON.stringify(this.formEmpty));
         UserApi.getUserOne({
           id: row.id,
         })

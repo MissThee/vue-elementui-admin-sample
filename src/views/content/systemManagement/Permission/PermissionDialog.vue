@@ -2,7 +2,7 @@
   <el-dialog :close-on-click-modal="false" :title="(isUpdate?'修改':'添加')+'权限'" :visible.sync="isShow" width="400px">
     <el-form :model="form" label-width="80px">
       <el-form-item label="所属层级">
-        <el-cascader :options="permissionTree" :props="prop" style="width: 100%" clearable v-model="form.parentIdForVModel"></el-cascader>
+        <tree-select v-model="form.parentId" :treeData="permissionTree" :props="prop" nodeKey="id"/>
       </el-form-item>
       <el-form-item label="名称">
         <el-input v-model="form.name" placeHolder="请输入"></el-input>
@@ -33,10 +33,12 @@
 <script>
   import PermissionApi from 'src/api/permission-api';
   import { showResMsg } from 'src/utils/operation-result-message';
-
+  import TreeSelect from '../../../common/TreeSelect';
   export default {
     name: 'Add',
-    props: {},
+    components:{
+      TreeSelect
+    },
     data() {
       return {
         permissionTree: [],
@@ -48,8 +50,7 @@
           type: '',
           permission: '',
           isEnable: true,
-          parentIdForVModel: [],
-          parentId: null,
+          parentId: '',
           indexNum: 1000,
         },
         prop: {
@@ -66,25 +67,16 @@
         this.permissionTree = treeInfo;
         if (isUpdate) {
           this.form = rowInfo;
-          this.form.parentIdForVModel = rowInfo.parentId;
-          this.form.parentId = 0;
         } else {
           this.form = JSON.parse(JSON.stringify(this.formEmpty));
-          if (rowInfo !== undefined) {
-            this.form.parentIdForVModel = rowInfo.id;
+          if (rowInfo) {
+            this.form.parentId = rowInfo.id;
+            console.log('123123',rowInfo)
+            console.log('456456',this.form)
           }
         }
       },
       isOk() {
-        if (Array.isArray(this.form.parentIdForVModel)) {
-          if (this.form.parentIdForVModel.length === 0) {
-            this.form.parentId = 0;
-          } else {
-            this.form.parentId = this.form.parentIdForVModel[this.form.parentIdForVModel.length - 1];
-          }
-        } else {
-          this.form.parentId = this.form.parentIdForVModel;
-        }
         if (this.isUpdate) {
           PermissionApi.updatePermission(this.form)
             .then(({ data }) => {
