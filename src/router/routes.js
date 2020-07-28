@@ -31,7 +31,7 @@ export default [
     path: '/letClue',
     name: 'letClue',
     component: () => import('src/views/Layout'),
-    meta: { title: '线索管理', value: '7' },
+    meta: { title: '线索管理', value: 'letClueManage' },
     children: [
       {
         path: 'letterClue',
@@ -50,7 +50,7 @@ export default [
     path: '/manage',
     name: 'manage',
     component: () => import('src/views/Layout'),
-    meta: { auth: true, title: '系统管理', value: '1', },
+    meta: { auth: true, title: '系统管理', value: 'systemManage', },
     children: [
       {
         path: 'user',
