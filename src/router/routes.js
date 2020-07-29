@@ -77,6 +77,11 @@ export default [
         name: 'manage-dataDictionary',
         component: () => import('src/views/content/systemManagement/DataDictionary'),
         meta: { title: '数据字典', value: 'dicAll', }
+      }, {
+        path: 'sendMessage',
+        name: 'manage-sendMessage',
+        component: () => import('src/views/content/systemManagement/SendMessage'),
+        meta: { title: '发送消息', value: 'sendMessage', }
       }
     ],
   },

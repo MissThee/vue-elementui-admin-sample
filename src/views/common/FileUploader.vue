@@ -2,7 +2,7 @@
   <div>
     <el-form-item>
       <el-upload
-        :action="Global.URL+'/stuff/file'"
+        :action="Global.HTTP_URL+'/stuff/file'"
         :headers="headers"
         class="upload-demo"
         :class="{'hide-upload-button':!canEdit}"

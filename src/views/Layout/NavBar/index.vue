@@ -73,6 +73,9 @@
             .then(() => {
               removeToken();
               removeLoginInfo();
+              if (this.$socket) {
+                this.$socket.disconnect();
+              }
               this.$message({
                 type: 'success',
                 message: '已退出',

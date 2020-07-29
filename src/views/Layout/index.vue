@@ -20,6 +20,9 @@
   import TagsBar from 'src/views/Layout/TagsBar';
   import * as Cookies from 'src/utils/cookies';
   import AuthApi from 'src/api/auth-api';
+  import Global from 'src/utils/global';
+  import { getTokenOrRedirect } from 'src/utils/cookies';
+  import { Notification } from 'element-ui';
 
   export default {
     name: 'Home',
@@ -33,9 +36,45 @@
         timer: true,
       };
     },
+    sockets: {
+      listener: {
+        broadcast(data) {//监听广播事件
+          Notification.info({
+            title: '广播：' + data.msg,
+            position: 'bottom-right',
+          });
+        },
+        msgToOneUser(data) {//监听发送给本用户信息事件
+          Notification.info({
+            title: '新消息：' + data.msg,
+            position: 'bottom-right',
+          });
+        },
+        reconnecting(data) {
+          if (data >= 3) {
+            //重试3次就不重连了。这里应该改成从http端口获取后台的配置，若开启了socket服务，再连接，否则不进行连接
+            this.$socket.disconnect();
+          }
+        },
+      }
+    },
     created() {
       this.initContentHeight();
       this.initUserInfo();
+    },
+    mounted() {
+      if (this.$socket) {
+        if (this.$socket.connected) {
+          this.$socket.disconnect();
+        }
+        this.$socket.io.uri = Global.SOCKET_URL + '?token=' + getTokenOrRedirect();
+        this.$socket.connect();
+      }
+    },
+    beforeDestroy() {
+      if (this.$socket) {
+        this.$socket.disconnect();
+      }
     },
     methods: {
       ...mapActions('layout', {

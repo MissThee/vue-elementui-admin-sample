@@ -62,11 +62,11 @@ function noAuth() {
   Cookies.remove(tokenKey);
   router.replace('/')
     .then(() => {
-      Notification({
-        customClass: 'custom-message-box-z-index',//确保不被dialog遮罩层遮盖，样式定义于assets/css/style.css中
-        title: '您尚未登录',
-        message: '请登录以访问平台。',
-        type: 'error'
-      });
+      // Notification({
+      //   customClass: 'custom-message-box-z-index',//确保不被dialog遮罩层遮盖，样式定义于assets/css/style.css中
+      //   title: '您尚未登录',
+      //   message: '请登录以访问平台。',
+      //   type: 'error'
+      // });
     });
 }

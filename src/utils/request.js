@@ -5,7 +5,7 @@ import { Notification } from 'element-ui';
 import router from 'src/router';
 //全局使用此axios实例进行http请求，统一设置
 const request = axios.create({
-  baseURL: Global.URL,
+  baseURL: Global.HTTP_URL,
   timeout: 50000,
 });
 
